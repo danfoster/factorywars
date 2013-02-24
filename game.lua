@@ -12,8 +12,6 @@ function Game:init()
     self.updatingView = false
     self.oldMouseX = 0
     self.oldMouseY = 0
-    self.cam.scale = 1.0
-    
 end
 
 function Game:enter()
@@ -21,7 +19,12 @@ end
 
 function Game:draw()
     self.cam:attach()
-    self.level:autoDrawRange( self.cam.x, self.cam.y, 1, 0)
+    camWorldWidth = love.graphics.getWidth() / self.cam.scale
+    camWorldHeight = love.graphics.getHeight() / self.cam.scale
+    camWorldX = self.cam.x - (camWorldWidth / 2)
+    camWorldY = self.cam.y - (camWorldHeight / 2)
+    self.level:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
+
     self.level:draw()
     self.cam:detach()
 end
