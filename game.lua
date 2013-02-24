@@ -12,24 +12,25 @@ function Game:init()
     self.updatingView = false
     self.oldMouseX = 0
     self.oldMouseY = 0
-    self.viewX = 0
-    self.viewY = 0
+    self.cam.scale = 1.0
+    
 end
 
 function Game:enter()
 end
 
 function Game:draw()
-    love.graphics.translate( self.viewX, self.viewY )
-    self.level:autoDrawRange( self.viewX, self.viewY, 1, pad)
+    self.cam:attach()
+    self.level:autoDrawRange( self.cam.x, self.cam.y, 1, 0)
     self.level:draw()
+    self.cam:detach()
 end
 
 
 function Game:update(dt)
     if self.updatingView then
-        self.viewX = self.viewX + (love.mouse.getX() - self.oldMouseX) 
-        self.viewY = self.viewY + (love.mouse.getY() - self.oldMouseY) 
+        self.cam.x = self.cam.x - (love.mouse.getX() - self.oldMouseX)/self.cam.scale 
+        self.cam.y = self.cam.y - (love.mouse.getY() - self.oldMouseY)/self.cam.scale
         self.oldMouseX = love.mouse.getX()
         self.oldMouseY = love.mouse.getY()
     end
@@ -40,6 +41,10 @@ function Game:mousepressed(x,y,button)
         self.updatingView = true
         self.oldMouseX = x
         self.oldMouseY = y
+    elseif button == 'wd' then
+        self.cam.scale = self.cam.scale - 0.1
+    elseif button == 'wu' then
+        self.cam.scale = self.cam.scale + 0.1
     end
 end
 
