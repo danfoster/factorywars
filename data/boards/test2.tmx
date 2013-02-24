@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="128" tileheight="128">
  <tileset firstgid="1" name="factory" tilewidth="128" tileheight="128">
-  <image source="../tiles/factory.png" width="128" height="256"/>
+  <image source="../tiles/factory.png" width="128" height="640"/>
  </tileset>
- <layer name="Tile Layer 1" width="100" height="100">
+ <layer name="set" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1TEKwDAIBVDt/Q9dOhRClrhEHN4DERyVjxkRWSh6fLt+DuUefSrZcI8+ufQszLlLPmY5/Y6/6CEfs2Shu0efdd/7DfY598nHLP4HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMzxAnaaAHI=
+   eJzt2EEKwjAUBNBYyD09mkfxaDVgIARLjTDFxXvwN+muw+SX1lJK/WHIaO/29uXII6/nsZ2MPK6x0o+tyCOt5zHmUg/Oe1fkkbPajz5ktDzOdsfYC/3I8n31X+Y90bw68BjPx2eyyJr3+HAvPT/lQdbcj3cW96N+kLWyP8jzzwoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC42g4L2QOV
+  </data>
+ </layer>
+ <layer name="edge" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1UsKwzAMBUCBL5qj9Sg9WmtoQRQv4hAZQ2fA5OeF0ENxRESLeJ5ZQbl3nx8Te4+6SujksZeZPD77j5pK6L555D73+9H7/H1JcX9odj6odeX8MB91ZvNohbUwPj/ycz5LqJd7PfofyWOt3/kYXeWxjl7vp51cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHd4AdO9GQk=
   </data>
  </layer>
 </map>

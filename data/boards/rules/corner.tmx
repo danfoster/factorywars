@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="128" tileheight="128">
+ <tileset firstgid="1" name="factory" tilewidth="128" tileheight="128">
+  <image source="../../tiles/factory.png" width="128" height="640"/>
+ </tileset>
+ <layer name="ruleRegions" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0bEJAAAIA0Hdf2k7cQHR4g6+DySCj/J6AC1H/OALAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADYVmeUABg==
+  </data>
+ </layer>
+ <layer name="ruleSet" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztziEBAAAIA7Ab+lcmwh2YLcESoJnvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwZgGZ5QAG
+  </data>
+ </layer>
+ <layer name="rule_edge" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
+  </data>
+ </layer>
+</map>
