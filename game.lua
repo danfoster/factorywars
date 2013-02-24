@@ -11,7 +11,7 @@ function Game:init()
     self.level = ATL.Loader.load("test2.tmx") 
     self.updatingView = false
     self.oldMouseX = 0
-    self.oldMouseY = 0
+    self.oldMouseY = 0 
 end
 
 function Game:enter()
@@ -45,9 +45,9 @@ function Game:mousepressed(x,y,button)
         self.oldMouseX = x
         self.oldMouseY = y
     elseif button == 'wd' then
-        self.cam.scale = self.cam.scale - 0.1
+        self.cam.scale = math.max(self.cam.scale / 1.2, 0.1)
     elseif button == 'wu' then
-        self.cam.scale = self.cam.scale + 0.1
+        self.cam.scale = math.min(self.cam.scale * 1.1, 5)
     end
 end
 
