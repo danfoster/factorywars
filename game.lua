@@ -1,7 +1,7 @@
 local Class = require("hump.class")
 local Camera = require("hump.camera")
 local ATL = require("AdvTiledLoader") 
-local Robot = require("Robot")
+local Robot = require("robot")
 
 local Game = Class {
 }
