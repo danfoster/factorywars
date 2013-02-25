@@ -2,6 +2,7 @@ local Class = require("hump.class")
 local Camera = require("hump.camera")
 local ATL = require("AdvTiledLoader") 
 local Robot = require("robot")
+local Card = require("card")
 
 local Game = Class {
 }
@@ -9,11 +10,14 @@ local Game = Class {
 function Game:init()
     self.cam = Camera()
     ATL.Loader.path = 'data/boards/'
-    self.level = ATL.Loader.load("test2.tmx")
+    self.level = ATL.Loader.load("test2.tmx") 
     self.updatingView = false
     self.oldMouseX = 0
     self.oldMouseY = 0 
-    self.robots = {Robot(self.level, 2, 2, 1), Robot(self.level, 5, 5, 2)}
+    
+    -- test code
+    self.robot = Robot(level, 2, 2, 1)
+    self.fCard = Card(1, 1)
 end
 
 function Game:enter()
@@ -29,11 +33,7 @@ function Game:draw()
 
     self.level:draw()
     
-    -- robots
-    for i = 1, # self.robots do
-        self.robots[i]:draw()
-    end
-    
+    self.robot:draw()
     
     self.cam:detach()
 end
@@ -55,6 +55,24 @@ function Game:turn()
     -- end of turn effects
 end
 
+function Game:executeCard(card, robot)
+    if card.forward ~= 0 then
+        local absolute = abs(card.forward)
+        for i = 1, absolute do
+            x, y = robot:move(card.forward / absolute)
+            -- TODO: function for checking collisions
+            robot.x = x
+            robot.y = y
+        end
+    end
+    -- TODO: strafing
+    if card.rotate ~= 0 then
+        -- could do this in 90 degree increments if we want
+        o = robot:rotate(card.rotate)
+        robot.orient = o
+    end
+end
+
 function Game:mousepressed(x,y,button)
     if button == 'r' then
         self.updatingView = true
@@ -74,27 +92,27 @@ function Game:mousereleased(x,y,button)
 end
 
 function Game:keypressed(key)
-    local x = self.robots[1].x
-    local y = self.robots[1].y
-    local o = self.robots[1].orient
+    local x = self.robot.x
+    local y = self.robot.y
+    local o = self.robot.orient
     if key == "w" then
-        x,y = self.robots[1]:move(1)
+        x,y = self.robot:move(1)
     elseif key == "a" then
-        x,y = self.robots[1]:move(0, -1)
+        x,y = self.robot:move(0, -1)
     elseif key == "s" then
-        o = self.robots[1]:rotate(2)
+        o = self.robot:rotate(2)
     elseif key == "d" then
-        x,y = self.robots[1]:move(0, 1)
+        x,y = self.robot:move(0, 1)
     elseif key == "q" then
-        o = self.robots[1]:rotate(-1)
+        o = self.robot:rotate(-1)
     elseif key == "e" then
-        o = self.robots[1]:rotate(1)    
-    elseif key == "rctrl" then
-        debug.debug()
+        o = self.robot:rotate(1)
+    elseif key == "i" then
+        executeCard(self.fCard, self.robot)
     end
-    self.robots[1].x = x
-    self.robots[1].y = y
-    self.robots[1].orient = o
+    self.robot.x = x
+    self.robot.y = y
+    self.robot.orient = o
 end
 
 return Game
