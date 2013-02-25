@@ -9,11 +9,11 @@ local Game = Class {
 function Game:init()
     self.cam = Camera()
     ATL.Loader.path = 'data/boards/'
-    self.level = ATL.Loader.load("test2.tmx") 
+    self.level = ATL.Loader.load("test2.tmx")
     self.updatingView = false
     self.oldMouseX = 0
     self.oldMouseY = 0 
-    self.robot = Robot(level, 2, 2, 1)
+    self.robots = {Robot(self.level, 2, 2, 1), Robot(self.level, 5, 5, 2)}
 end
 
 function Game:enter()
@@ -29,7 +29,11 @@ function Game:draw()
 
     self.level:draw()
     
-    self.robot:draw()
+    -- robots
+    for i = 1, # self.robots do
+        self.robots[i]:draw()
+    end
+    
     
     self.cam:detach()
 end
@@ -70,25 +74,27 @@ function Game:mousereleased(x,y,button)
 end
 
 function Game:keypressed(key)
-    local x = self.robot.x
-    local y = self.robot.y
-    local o = self.robot.orient
+    local x = self.robots[1].x
+    local y = self.robots[1].y
+    local o = self.robots[1].orient
     if key == "w" then
-        x,y = self.robot:move(1)
+        x,y = self.robots[1]:move(1)
     elseif key == "a" then
-        x,y = self.robot:move(0, -1)
+        x,y = self.robots[1]:move(0, -1)
     elseif key == "s" then
-        o = self.robot:rotate(2)
+        o = self.robots[1]:rotate(2)
     elseif key == "d" then
-        x,y = self.robot:move(0, 1)
+        x,y = self.robots[1]:move(0, 1)
     elseif key == "q" then
-        o = self.robot:rotate(-1)
+        o = self.robots[1]:rotate(-1)
     elseif key == "e" then
-        o = self.robot:rotate(1)    
+        o = self.robots[1]:rotate(1)    
+    elseif key == "rctrl" then
+        debug.debug()
     end
-    self.robot.x = x
-    self.robot.y = y
-    self.robot.orient = o
+    self.robots[1].x = x
+    self.robots[1].y = y
+    self.robots[1].orient = o
 end
 
 return Game
