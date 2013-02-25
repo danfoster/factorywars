@@ -9,7 +9,7 @@ function Robot:init(level, x, y, orient, image)
     self.x = x
     self.y = y
     self.orient = orient
-    self.icon = image or love.graphics.newImage('data/tiles/raw/robot.png')
+    self.icon = image or love.graphics.newImage('data/objects/01_robot.png')
 end
 
 function Robot:draw()
