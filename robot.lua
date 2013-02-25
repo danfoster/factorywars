@@ -14,7 +14,7 @@ function Robot:init(level, x, y, orient, image)
 end
 
 function Robot:draw()
-    love.graphics.draw(self.icon, self.x * self.level.tileWidth + 64, self.y * self.level.tileHeight + 64, (math.pi * 2 / 4) * (self.orient - 1), 1, 1, 64, 64)
+    love.graphics.draw(self.icon, (self.x + 0.5) * self.level.tileWidth, (self.y + 0.5) * self.level.tileHeight, (math.pi * 2 / 4) * (self.orient - 1), 1, 1, 64, 64)
 end
 
 -- returns the position the robot would be in if the given movement were made
