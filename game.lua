@@ -30,9 +30,9 @@ function Game:draw()
     self.level:draw()
     
     self.robot:draw()
+    
     self.cam:detach()
 end
-
 
 function Game:update(dt)
     if self.updatingView then
@@ -41,6 +41,14 @@ function Game:update(dt)
         self.oldMouseX = love.mouse.getX()
         self.oldMouseY = love.mouse.getY()
     end
+end
+
+function Game:turn()
+    -- distribute cards
+    -- arrange cards
+    -- announce intent to power down or continue running next turn
+    -- execute registers (card movements, board movements, interactions)
+    -- end of turn effects
 end
 
 function Game:mousepressed(x,y,button)
