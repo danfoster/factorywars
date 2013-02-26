@@ -65,6 +65,8 @@ function GameState:keypressed(key)
         o = self.game.robot:rotate(1)
     elseif key == "i" then
         executeCard(self.game.fCard, self.game.robot)
+        x = self.robot.x
+        y = self.robot.y
     end
     self.game.robot.x = x
     self.game.robot.y = y

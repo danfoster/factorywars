@@ -19,7 +19,7 @@ function Game:init()
     
     -- test code
     self.robot = Robot(self.level, 2, 2, 1)
-    --self.fCard = Card(1, 1)
+    self.fCard = Card(1, 1)
 end
 
 function Game:addEdges()
