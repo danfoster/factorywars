@@ -16,8 +16,8 @@ function Game:init()
     self.oldMouseY = 0 
     
     -- test code
-    self.robot = Robot(level, 2, 2, 1)
-    self.fCard = Card(1, 1)
+    self.robot = Robot(self.level, 2, 2, 1)
+    --self.fCard = Card(1, 1)
 end
 
 function Game:enter()

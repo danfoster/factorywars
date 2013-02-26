@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="128" tileheight="128">
- <tileset firstgid="1" name="factory" tilewidth="128" tileheight="128">
-  <image source="../tiles/factory.png" width="128" height="640"/>
+ <tileset firstgid="1" name="floor" tilewidth="128" tileheight="128">
+  <image source="../tiles/floor.png" width="128" height="384"/>
  </tileset>
  <layer name="set" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2EEKwjAUBNBYyD09mkfxaDVgIARLjTDFxXvwN+muw+SX1lJK/WHIaO/29uXII6/nsZ2MPK6x0o+tyCOt5zHmUg/Oe1fkkbPajz5ktDzOdsfYC/3I8n31X+Y90bw68BjPx2eyyJr3+HAvPT/lQdbcj3cW96N+kLWyP8jzzwoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC42g4L2QOV
+   eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
   </data>
  </layer>
  <layer name="edge" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1UsKhDAMANBAPWiPNkeZo42CQqe4sGJE8D0opZ9FSAiJiCgR3yMrSDfn+TPwt+ZFwkI9nmWkHuv/mhMJi60e0/9d3btv39MDe6nR/iDXmfmhP/KM1qMkxsL+/GjP7SwhX5vrqdvXd/W4Ud8f/a4e95Lr5ykHFwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAVft/lFbI=
+   eJzt1VEKgCAQBUCxi3a0jtLRskCIyPJrE5qBRfvt8daUGE3uGOLs/3t6GZnE6emHPOLkm7NO6cYij1jXDpyyOJRzlUecpx1Vspj1I5b3Yyx3u+p8l0es3LjXb3nEau0m/fiG9wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgvzYWLQKP
   </data>
  </layer>
 </map>
