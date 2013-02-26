@@ -36,7 +36,7 @@ end
 
 function Game:executeCard(card, robot)
     if card.forward ~= 0 then
-        local absolute = abs(card.forward)
+        local absolute = math.abs(card.forward)
         for i = 1, absolute do
             x, y = robot:move(card.forward / absolute)
             -- TODO: function for checking collisions
