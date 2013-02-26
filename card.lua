@@ -9,5 +9,7 @@ function Card:init(priority, forward, strafe, rotate, image)
     self.forward = forward or 0
     self.strafe = strafe or 0
     self.rotate = rotate or 0
-    self.icon = image or love.graphics.newImage('data/tiles/raw/card.png')
+    self.icon = image or love.graphics.newImage('data/objects/card.png')
 end
+
+return Card

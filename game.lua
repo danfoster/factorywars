@@ -17,7 +17,7 @@ function Game:init()
     
     -- test code
     self.robot = Robot(self.level, 2, 2, 1)
-    --self.fCard = Card(1, 1)
+    self.fCard = Card(1, 1)
 end
 
 function Game:enter()
@@ -57,9 +57,9 @@ end
 
 function Game:executeCard(card, robot)
     if card.forward ~= 0 then
-        local absolute = abs(card.forward)
+        local absolute = math.abs(card.forward)
         for i = 1, absolute do
-            x, y = robot:move(card.forward / absolute)
+            local x,y = robot:move(card.forward / absolute)
             -- TODO: function for checking collisions
             robot.x = x
             robot.y = y
@@ -108,7 +108,9 @@ function Game:keypressed(key)
     elseif key == "e" then
         o = self.robot:rotate(1)
     elseif key == "i" then
-        executeCard(self.fCard, self.robot)
+        self:executeCard(self.fCard, self.robot)
+        x = self.robot.x
+        y = self.robot.y
     end
     self.robot.x = x
     self.robot.y = y
