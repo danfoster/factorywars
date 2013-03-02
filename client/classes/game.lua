@@ -17,7 +17,7 @@ function Game:init()
     
     
     -- test code
-    local host, port = "192.168.1.8", 1234
+    local host, port = "127.0.0.1", 1234
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive()
