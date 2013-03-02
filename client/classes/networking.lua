@@ -24,18 +24,22 @@ end
 
 function Networking:connect(host, port)
     tcp:connect(host, port);
+    print('connected to server')
 end
 
 function Networking:close()
     tcp:close()
+    print('disconnected from server')
 end
 
 function Networking:send(data)
     tcp:send(data .. '\r\n')
+    print('sent data to server')
 end
 
 function Networking:receive()
     local s, status, partial = tcp:receive()
+    print('received data from server')
     return json.decode(s)
 end
 
