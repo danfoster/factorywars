@@ -3,6 +3,18 @@ local socket=require ("socket")
 local tcp = assert(socket.tcp())
 require("json.json")
 
+ServerCommands = {ProgramDeck = 0,
+                  DealProgramCards = 1,
+                  FinalPlayerChoosingOptionCards = 2,
+                  DealOptionCard = 3,
+                  DamageRobot = 4}
+
+ClientCommands = {MyNameIs = 0,
+                  ArrangeProgramCard = 1,
+                  ClearProgramCardArrangement = 2,
+                  PlayOptionCard = 3,
+                  PowerDownNextTurn = 4}
+
 local Networking = Class {
 }
 
