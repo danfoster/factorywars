@@ -21,9 +21,15 @@ function Game:init()
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive()
-    for k,v in pairs(data) do
-        print(k, v)
+    self.deck = {}
+    for k,v in pairs(data['value']) do
+        table.insert(self.deck, Card(v['priority'], v['program']))
     end
+    -- for k,v in pairs(self.deck) do
+        -- for ke,ve in pairs(v) do
+            -- print(ke, ve)
+        -- end
+    -- end
     self.networking:close()
     
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
