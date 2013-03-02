@@ -1,9 +1,10 @@
 import config
 import utils
+from network import ClientCommands
 
+import json
 from twisted.internet.protocol import Factory
 from twisted.protocols.basic import LineReceiver
-
 
 class Client(LineReceiver):
     def __init__(self,game):
@@ -26,8 +27,8 @@ class Client(LineReceiver):
 
         message = json.loads(line)
 
-        if message.command == ClientCommands.MyNameIs:
-            self.nickname = message.value
+        if message['command'] == ClientCommands.MyNameIs:
+            self.nickname = message['value']
 
 
 class ClientFactory(Factory):
