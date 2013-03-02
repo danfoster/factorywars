@@ -1,6 +1,6 @@
 import config
 import utils
-from network import ClientCommands
+from network import ClientCommands, ServerCommands
 
 import json
 from twisted.internet.protocol import Factory
@@ -15,7 +15,7 @@ class Client(LineReceiver):
         if config.debug:
             print 'new connection'
         self.game.addClient(self)
-        self.sendLine(utils.toJSON({ 'command': 'programDeck', 'value': self.game.deck.getDeck() }))
+        self.sendLine(utils.toJSON({ 'command': ServerCommands.ProgramDeck, 'value': self.game.deck.getDeck() }))
 
     def connectionLost(self, reason):
         if config.debug:

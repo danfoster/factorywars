@@ -30,7 +30,7 @@ function Game:init()
             -- print(ke, ve)
         -- end
     -- end
-    self.networking:send('{ "command": 0, "value": "my local client" }')
+    self.networking:send('{ "command": ' .. ClientCommands.MyNameIs .. ', "value": "my local client" }')
     self.networking:close()
     
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
