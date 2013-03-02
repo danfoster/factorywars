@@ -30,10 +30,13 @@ function Game:addEdges()
     local edgeLayer = ATL.TileLayer:new(self.level,'edges',100,{})
     self.level.layers[edgeLayer.name] = edgeLayer
     self.level.layerOrder[#self.level.layerOrder + 1] = edgeLayer
+    local edgeCornerLayer = ATL.TileLayer:new(self.level,'edgeCorners',100,{})
+    self.level.layers[edgeCornerLayer.name] = edgeCornerLayer
+    self.level.layerOrder[#self.level.layerOrder + 1] = edgeCornerLayer
 
     -- Create edge TileSet
     edgeImage = love.graphics.newImage('data/tiles/edges.png')
-    local edgeTileSet = ATL.TileSet:new(edgeImage,'data/tiles/','edges',128,128,128,128*9,0,0,0,0,0,0)
+    local edgeTileSet = ATL.TileSet:new(edgeImage,'data/tiles/','edges',128,128,128,128*10,0,0,0,0,0,0)
     local edgeTiles = edgeTileSet:getTiles()
 
     -- Add edge Tiles over any pits
@@ -47,7 +50,7 @@ function Game:addEdges()
                 if self.level.layers['floor']:get(x,y-1) == nil then blankEdges = blankEdges + 1 end
                 if self.level.layers['floor']:get(x,y+1) == nil then blankEdges = blankEdges + 1 end
 
-                local et = 0
+                local et = nil
                 local r = 0
                 if blankEdges == 0 then
                     et = 4
@@ -85,6 +88,8 @@ function Game:addEdges()
                         and self.level.layers['floor']:get(x+1,y) == nil then
                             r = 3
                         end
+
+                        -- Possible edgeCorner here (one)
                     end
                 elseif blankEdges == 3 then
                     et = 0
@@ -93,31 +98,90 @@ function Game:addEdges()
                     elseif self.level.layers['floor']:get(x-1,y) ~= nil then r = 3
                     elseif self.level.layers['floor']:get(x,y-1) ~= nil then r = 0
                     end
-                    -- TODO: Need 10th tile with a dot in the opposite corner
-                elseif blankEdges == 4 then
-                    local blankCorners = 0
-                    if self.level.layers['floor']:get(x-1,y-1) == nil then blankCorners = blankCorners + 1 end
-                    if self.level.layers['floor']:get(x+1,y-1) == nil then blankCorners = blankCorners + 1 end
-                    if self.level.layers['floor']:get(x-1,y+1) == nil then blankCorners = blankCorners + 1 end
-                    if self.level.layers['floor']:get(x+1,y+1) == nil then blankCorners = blankCorners + 1 end
 
-                    if blankCorners == 0 then
-                        et = 8
-                        -- no rotation needed
-                    elseif blankCorners == 1 then
-                        et = 7
-                        -- TODO: rotation
-                    elseif blankCorners == 2 then
+                    -- Possible edgeCorner here (one or 2)
+                end
+
+                if et ~= nil then
+                    self.level.layers['edges']:tileRotate(x,y,r)
+                    self.level.layers['edges']:set(x,y,edgeTiles[et])
+                end
+
+
+                -- Determine edge corners
+                local edgeC = {}
+                local edgeCTotal = 0
+                if self.level.layers['floor']:get(x-1,y-1) ~= nil
+                and self.level.layers['floor']:get(x,y-1) == nil
+                and self.level.layers['floor']:get(x-1,y) == nil then
+                    edgeCTotal = edgeCTotal + 1
+                    edgeC['tl'] = 1
+                end
+                if self.level.layers['floor']:get(x+1,y-1) ~= nil
+                and self.level.layers['floor']:get(x,y-1) == nil
+                and self.level.layers['floor']:get(x+1,y) == nil then
+                    edgeCTotal = edgeCTotal + 1
+                    edgeC['tr'] = 1
+                end
+                if self.level.layers['floor']:get(x-1,y+1) ~= nil
+                and self.level.layers['floor']:get(x,y+1) == nil
+                and self.level.layers['floor']:get(x-1,y) == nil then
+                    edgeCTotal = edgeCTotal + 1
+                    edgeC['bl'] = 1
+                end
+                if self.level.layers['floor']:get(x+1,y+1) ~= nil
+                and self.level.layers['floor']:get(x,y+1) == nil
+                and self.level.layers['floor']:get(x+1,y) == nil then
+                    edgeCTotal = edgeCTotal + 1
+                    edgeC['br'] = 1
+                end
+
+                local et = nil
+                local r = 0
+                if edgeCTotal == 4 then
+                    et = 8
+                    -- no rotation needed
+                elseif edgeCTotal == 3 then
+                    et = 7
+                    if edgeC['tl'] == nil then r = 5
+                    elseif edgeC['tr'] == nil then r = 6
+                    elseif edgeC['br'] == nil then r = 3
+                    end
+
+                elseif edgeCTotal == 2 then
+                    if edgeC['tl'] == 1 and edgeC['br'] == 1 then
+                        et = 9
+                        r = 5
+                    elseif edgeC['tr'] == 1 and edgeC['bl'] == 1 then
+                        et = 9
+                        r = 0
+                    else
                         et = 6
                         -- TODO: rotation
-                    elseif blankCorners == 3 then
-                        et = 5
-                        -- TODO: rotation
+                        if edgeC['tl'] == 1 and edgeC['tr'] == 1 then
+                            r = 0
+                        elseif edgeC['tr'] == 1 and edgeC['br'] == 1 then
+                            r = 5
+                        elseif edgeC['br'] == 1 and edgeC['bl'] == 1 then
+                            r = 6
+                        elseif edgeC['bl'] == 1 and edgeC['tl'] == 1 then
+                            r = 3
+                        end
+
+                    end
+                elseif edgeCTotal == 1 then
+                    et = 5
+                    if edgeC['tr'] == 1 then r = 5
+                    elseif edgeC['br'] == 1 then r = 6
+                    elseif edgeC['bl'] == 1 then r = 3
                     end
                 end
 
-                self.level.layers['edges']:tileRotate(x,y,r)
-                self.level.layers['edges']:set(x,y,edgeTiles[et])
+                if et ~= nil then
+                    self.level.layers['edgeCorners']:tileRotate(x,y,r)
+                    self.level.layers['edgeCorners']:set(x,y,edgeTiles[et])
+                end
+
             end
         end
     end
