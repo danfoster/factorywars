@@ -1,9 +1,6 @@
+from utils import *
 
 class Robot:
-    
-    # see http://stackoverflow.com/questions/36932/whats-the-best-way-to-implement-an-enum-in-python
-    def enum(**enums):
-        return type('Enum', (), enums)
     
     Dir = enum(RIGHT=1, UP=2, LEFT=3, DOWN=4)
     
