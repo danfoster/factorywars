@@ -9,7 +9,7 @@ Program = enum(UTurn = 0,
                Move3 = 6)
 
 class Card:
-	def __init__(self, priority, program):
-		self.id = priority
-		self.priority = priority
-		self.program = program
+    def __init__(self, priority, program):
+        self.id = priority
+        self.priority = priority
+        self.program = program

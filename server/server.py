@@ -17,7 +17,7 @@ class Client(LineReceiver):
     def connectionMade(self):
         if config.debug:
             print 'new connection'
-        self.sendLine(utils.toJSON({ 'command': 'programDeck', 'value': game.programCards }))
+        self.sendLine(utils.toJSON({ 'command': 'programDeck', 'value': game.deck.getDeck() }))
 
     def connectionLost(self, reason):
         if config.debug:
