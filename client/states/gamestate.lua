@@ -6,17 +6,7 @@ function GameState:enter()
 end
 
 function GameState:draw()
-    self.game.cam:attach()
-    local camWorldWidth = love.graphics.getWidth() / self.game.cam.scale
-    local camWorldHeight = love.graphics.getHeight() / self.game.cam.scale
-    local camWorldX = self.game.cam.x - (camWorldWidth / 2)
-    local camWorldY = self.game.cam.y - (camWorldHeight / 2)
-    self.game.level:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
-
-    self.game.level:draw()
-    self.game.robot:draw()
-    
-    self.game.cam:detach()
+    self.game:draw()
 end
 
 function GameState:update(dt)

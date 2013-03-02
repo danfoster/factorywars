@@ -5,8 +5,9 @@ local Robot = Class {
 
 local direction = {right = 1, up = 2, left = 3, down = 4}
 
-function Robot:init(level, x, y, orient, image)
-    self.level = level
+function Robot:init(x, y, orient, image, tileWidth, tileHeight)
+    self.tileWidth = tileWidth
+    self.tileHeight = tileHeight
     self.x = x
     self.y = y
     self.orient = orient
@@ -14,9 +15,7 @@ function Robot:init(level, x, y, orient, image)
 end
 
 function Robot:draw()
-    local tw = self.level.tileWidth
-    local th = self.level.tileHeight
-    love.graphics.draw(self.icon, (self.x + 0.5) * tw, (self.y + 0.5) * th, (math.pi * 2 / 4) * (self.orient - 1), 1, 1, tw / 2, th / 2)
+    love.graphics.draw(self.icon, (self.x + 0.5) * self.tileWidth, (self.y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * (self.orient - 1), 1, 1, self.tileWidth / 2, self.tileHeight / 2)
 end
 
 -- returns the position the robot would be in if the given movement were made
