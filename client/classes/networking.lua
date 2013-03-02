@@ -19,7 +19,7 @@ function Networking:close()
 end
 
 function Networking:send(data)
-    tcp:send(data)
+    tcp:send(data .. '\r\n')
 end
 
 function Networking:receive()
