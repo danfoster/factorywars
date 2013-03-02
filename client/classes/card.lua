@@ -1,14 +1,19 @@
 local Class = require("hump.class")
 
+Program = {UTurn = 0,
+           RotateRight = 1,
+           RotateLeft = 2,
+           BackUp = 3,
+           Move1 = 4,
+           Move2 = 5,
+           Move3 = 6}
+           
 local Card = Class {
 }
-
--- negative strafe for left, positive for right
-function Card:init(priority, forward, strafe, rotate, image)
+function Card:init(priority, program, image)
+    self.id = priority
     self.priority = priority
-    self.forward = forward or 0
-    self.strafe = strafe or 0
-    self.rotate = rotate or 0
+    self.program = program
     self.icon = image or love.graphics.newImage('data/objects/card.png')
 end
 

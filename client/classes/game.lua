@@ -17,7 +17,15 @@ function Game:init()
     
     
     -- test code
+    local host, port = "192.168.1.8", 1234
     self.networking = Networking()
+    self.networking:connect(host, port)
+    local data = self.networking:receive()
+    for k,v in pairs(data) do
+        print(k, v)
+    end
+    self.networking:close()
+    
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
     self.fCard = Card(1, 1)
 end

@@ -46,8 +46,6 @@ end
 function Level:_addMargin()
     for x=self.level.width-1,0,-1 do
         for y=self.level.height-1,0,-1 do
-            print(x,y)
-            
             self.level.layers['floor']:tileCopy(x,y)
             self.level.layers['floor']:tilePaste(x+1,y+1)
         end
