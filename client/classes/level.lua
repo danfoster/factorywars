@@ -29,6 +29,8 @@ function Level:addEdges()
     edgeTileSet = ATL.TileSet:new(edgeImage,'data/tiles/','edges',128,128,128,128*10,0,0,0,0,0,0)
     edgeTiles = edgeTileSet:getTiles()
 
+    self:_addMargin()
+
     -- Add edge Tiles over any pits
     for y=0,self.level.height-1 do
         for x=0,self.level.width-1 do
@@ -39,6 +41,23 @@ function Level:addEdges()
         end
     end
 
+end
+
+function Level:_addMargin()
+    for x=self.level.width-1,0,-1 do
+        for y=self.level.height-1,0,-1 do
+            print(x,y)
+            
+            self.level.layers['floor']:tileCopy(x,y)
+            self.level.layers['floor']:tilePaste(x+1,y+1)
+        end
+        self.level.layers['floor']:set(x,0,nil)
+    end
+    for y=self.level.height-1,0,-1 do
+        self.level.layers['floor']:set(0,y,nil)
+    end
+    self.level.width = self.level.width+2
+    self.level.height = self.level.height+2
 end
 
 function Level:_addEdge(x,y)
