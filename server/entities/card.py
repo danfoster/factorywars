@@ -1,26 +1,15 @@
+from utils import *
+
+Program = enum(UTurn = 0,
+               RotateRight = 1,
+               RotateLeft = 2,
+               BackUp = 3,
+               Move1 = 4,
+               Move2 = 5,
+               Move3 = 6)
 
 class Card:
-	def __init__(self, priority, action):
+	def __init__(self, priority, program):
 		self.id = priority
 		self.priority = priority
-		self.action = action
-
-cards = []
-
-for i in range(1,84):
-	if i < 7:
-		action = Program.UTurn
-	elif i < 43:
-		action = Program.RotateRight if i % 2 == 0 else Program.RotateLeft
-	elif i < 49:
-		action = Program.BackUp
-	elif i < 67:
-		action = Program.Move1
-	elif i < 79:
-		action = Program.Move2
-	else:
-		action = Program.Move3
-
-	cards.append(Card(i * 10, action))
-
-print cards
+		self.program = program
