@@ -3,6 +3,7 @@ local Camera = require("hump.camera")
 local ATL = require("AdvTiledLoader") 
 local Robot = require("classes.robot")
 local Card = require("classes.card")
+local Networking = require("classes.networking")
 
 local Game = Class {
 }
@@ -18,6 +19,8 @@ function Game:init()
     
     
     -- test code
+    self.networking = Networking()
+    
     self.robot = Robot(self.level, 2, 2, 1)
     self.fCard = Card(1, 1)
 end
