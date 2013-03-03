@@ -17,7 +17,7 @@ class Client(LineReceiver):
             print 'new connection'
         self.game.addClient(self)
         self.sendLine(utils.toJSON(Command(ServerCommands.ProgramDeck, self.game.deck.getDeck())))
-        hand = [self.game.deck.dealCard() for x in range(1,10)]
+        hand = [self.game.deck.dealCard().id for x in range(1,10)]
         self.sendLine(utils.toJSON(Command(ServerCommands.DealProgramCards, hand)))
 
     def connectionLost(self, reason):
