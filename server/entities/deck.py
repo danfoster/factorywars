@@ -31,7 +31,7 @@ class Deck:
         if len(self.deck) < 1:
             raise 'Empty deck, this shouldn\'t happen!'
 
-        card = self.deck.pop(random.randint(0, len(self.deck)))
+        card = self.deck.pop(random.randint(0, len(self.deck) - 1))
         self.dealt.append(card)
         return card
 
