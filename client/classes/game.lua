@@ -18,7 +18,7 @@ function Game:init()
     
     
     -- test code
-    local host, port = "10.11.12.176", 1234
+    local host, port = "localhost", 1234
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive() 
@@ -32,14 +32,6 @@ function Game:init()
     self.networking:send({ command= ClientCommands.MyNameIs , value= "my local client" })
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
     self.networking:setTimeout(0.001)
-end
-
-function Game:turn()
-    -- distribute cards
-    -- arrange cards
-    -- announce intent to power down or continue running next turn
-    -- execute registers (card movements, board movements, interactions)
-    -- end of turn effects
 end
 
 function Game:executeCard(card, robot)
