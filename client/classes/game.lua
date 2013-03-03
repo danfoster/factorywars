@@ -23,6 +23,9 @@ function Game:init(host, port, nickname)
     if host == '' then
         host = "localhost"
     end
+    if nickname == '' then
+        nickname = "a client"
+    end
 
     print('Connecting to ' .. host .. ' on port ' .. port)
     self.networking = Networking()
