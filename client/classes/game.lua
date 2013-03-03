@@ -5,11 +5,12 @@ local Card = require("classes.card")
 local Deck = require("classes.deck")
 local Networking = require("classes.networking")
 local Level = require("classes.level")
+local Client = require("classes.client")
 
 local Game = Class {
 }
 
-function Game:init()
+function Game:init(host, port, nickname)
     self.cam = Camera()
     self.level = Level()
     self.updatingView = false
@@ -18,28 +19,30 @@ function Game:init()
     
     
     -- test code
-    local host, port = "10.11.12.176", 1234
+    local port = port or 1234
+    if host == '' then
+        host = "localhost"
+    end
+    if nickname == '' then
+        nickname = "a client"
+    end
+
+    print('Connecting to ' .. host .. ' on port ' .. port)
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive() 
     if data then
-        self.cards = {}
+        local cards = {}
         for k,v in pairs(data['value']) do
-            table.insert(self.cards, Card(v['priority'], v['program']))
+            local card = Card(v['id'],v['priority'],v['program'])
+            cards[card.id] = card
         end
-        self.deck = Deck(self.cards)
+        self.deck = Deck(cards)
     end
-    self.networking:send({ command= ClientCommands.MyNameIs , value= "my local client" })
+    self.networking:send({ command= ClientCommands.MyNameIs , value= nickname })
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
     self.networking:setTimeout(0.001)
-end
-
-function Game:turn()
-    -- distribute cards
-    -- arrange cards
-    -- announce intent to power down or continue running next turn
-    -- execute registers (card movements, board movements, interactions)
-    -- end of turn effects
+    self.client = Client(self.deck)
 end
 
 function Game:executeCard(card, robot)
@@ -83,13 +86,7 @@ function Game:update(dt)
     -- Receive Network Commands
     local data = self.networking:receive() 
     if data then
-        if data['command'] == ServerCommands.DealProgramCards then
-            for k,v in pairs(data['value']) do
-                print(k,v)
-            end
-        else
-            print("WARNING: Received unknown server command: " .. data['command'])
-        end
+        self:_handleNetworkCommand(data['command'],data['value'])
     end
 
     -- Update Camera
@@ -99,6 +96,17 @@ function Game:update(dt)
         self.oldMouseX = love.mouse.getX()
         self.oldMouseY = love.mouse.getY()
     end
+end
+
+function Game:_handleNetworkCommand(command,value)
+    if command == ServerCommands.DealProgramCards then
+        self.client:receiveHand(value)
+    elseif command == ServerCommands.ServerMessage then
+        self.client:serverMessage(value)
+    else
+        print("WARNING: Received unknown server command: " .. data['command'])
+    end
+
 end
 
 function Game:quit()

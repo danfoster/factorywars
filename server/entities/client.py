@@ -10,6 +10,7 @@ class Client(LineReceiver):
     def __init__(self, game):
         self.game = game
         self.nickname = '<new client>'
+        self.hand = []
         self.robot = None
 
     def connectionMade(self):
@@ -17,8 +18,8 @@ class Client(LineReceiver):
             print 'new connection'
         self.game.addClient(self)
         self.sendLine(utils.toJSON(Command(ServerCommands.ProgramDeck, self.game.deck.getDeck())))
-        hand = [self.game.deck.dealCard() for x in range(1,10)]
-        self.sendLine(utils.toJSON(Command(ServerCommands.DealProgramCards, hand)))
+        self.hand = [self.game.deck.dealCard().id for x in range(1,10)]
+        self.sendLine(utils.toJSON(Command(ServerCommands.DealProgramCards, self.hand)))
 
     def connectionLost(self, reason):
         if config.debug:
@@ -34,7 +35,12 @@ class Client(LineReceiver):
             self.nickname = message.value
 
         elif message.command == ClientCommands.SetRegister:
-            self.robot.registers[message.value['register']] = message.value['programCardId']
+            cardId = message.value['programCardId']
+            if cardId not in self.hand:
+                self.sendLine(utils.toJSON(Command(ServerCommands.ServerMessage, 'You just tried to send card ID \'%s\'. This card was not in your hand.' % cardId)))
+                return
+
+            self.robot.registers[message.value['register']] = cardId
 
         elif message.command == ClientCommands.ClearRegister:
             self.robot.registers[message.value['register']] = None

@@ -7,6 +7,9 @@ class Game:
         self.deck = Deck()
         self.clients = []
         self.robots = []
+        
+    def start(self):
+        self.executeRegister(0)
 
     def addClient(self, client):
         robot = Robot(1, 1, Direction.Right)
@@ -15,3 +18,23 @@ class Game:
         client.robot = robot
 
         self.clients.append(client)
+
+    
+    #def turn(self):
+        # distribute cards
+        # receive arranged cards
+        # receive any intent to power down
+        # execute registers (card movements, board movements, interactions)
+        # end of turn effects
+        
+    def executeRegister(self, regNum):
+        # reveal program cards
+        
+        # find robot with the highest priority for this register
+        robotRegisters = [(rob, reg) for rob in self.robots for reg in self.robots.registers[regNum]]
+        print(robotRegisters)
+        # robots move
+        
+        # board elements move
+        # lasers fire
+        # touch checkpoints
