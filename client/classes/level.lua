@@ -7,7 +7,7 @@ local Level = Class {
 
 function Level:init()
     ATL.Loader.path = 'data/boards/'
-    self.level = ATL.Loader.load("test2.tmx") 
+    self.level = ATL.Loader.load("cross.tmx") 
     self:addEdges()
 end
 
