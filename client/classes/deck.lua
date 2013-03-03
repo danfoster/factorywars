@@ -7,4 +7,8 @@ function Deck:init(cards)
     self.cards = cards
 end
 
+function Deck:get(cardId)
+    return self.cards[cardId]
+end
+
 return Deck

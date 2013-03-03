@@ -10,8 +10,8 @@ Program = {UTurn = 0,
            
 local Card = Class {
 }
-function Card:init(priority, program, image)
-    self.id = priority
+function Card:init(id, priority, program, image)
+    self.id = id
     self.priority = priority
     self.program = program
     self.icon = image or love.graphics.newImage('data/objects/card.png')
