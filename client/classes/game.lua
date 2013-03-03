@@ -10,7 +10,7 @@ local Client = require("classes.client")
 local Game = Class {
 }
 
-function Game:init(host, port)
+function Game:init(host, port, nickname)
     self.cam = Camera()
     self.level = Level()
     self.updatingView = false
@@ -36,7 +36,7 @@ function Game:init(host, port)
         end
         self.deck = Deck(cards)
     end
-    self.networking:send({ command= ClientCommands.MyNameIs , value= "my local client" })
+    self.networking:send({ command= ClientCommands.MyNameIs , value= nickname })
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
     self.networking:setTimeout(0.001)
     self.client = Client(self.deck)
