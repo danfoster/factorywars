@@ -1,6 +1,6 @@
 import config
 import utils
-from network import ClientCommands, ServerCommands
+from network import ClientCommands, ServerCommands, Command
 
 import json
 from twisted.internet.protocol import Factory
@@ -16,9 +16,9 @@ class Client(LineReceiver):
         if config.debug:
             print 'new connection'
         self.game.addClient(self)
-        self.sendLine(utils.toJSON({ 'command': ServerCommands.ProgramDeck, 'value': self.game.deck.getDeck() }))
+        self.sendLine(utils.toJSON(Command(ServerCommands.ProgramDeck, self.game.deck.getDeck())))
         hand = [self.game.deck.dealCard() for x in range(1,10)]
-        self.sendLine(utils.toJSON({ 'command': ServerCommands.DealProgramCards, 'value': hand }))
+        self.sendLine(utils.toJSON(Command(ServerCommands.DealProgramCards, hand)))
 
     def connectionLost(self, reason):
         if config.debug:
@@ -28,10 +28,10 @@ class Client(LineReceiver):
         if config.debug:
             print '<%s>: %s' % (self.nickname, line)
 
-        message = json.loads(line)
+        message = utils.evalJSON(line)
 
-        if message['command'] == ClientCommands.MyNameIs:
-            self.nickname = message['value']
+        if message.command == ClientCommands.MyNameIs:
+            self.nickname = message.value
 
 
 class ClientFactory(Factory):
@@ -40,5 +40,3 @@ class ClientFactory(Factory):
 
     def buildProtocol(self, addr):
         return Client(self.game)
-
-

@@ -11,3 +11,8 @@ ClientCommands = enum(MyNameIs = 0,
                       ClearProgramCardArrangement = 2,
                       PlayOptionCard = 3,
                       PowerDownNextTurn = 4)
+
+class Command:
+    def __init__(self, command, value):
+        self.command = command
+        self.value = value
