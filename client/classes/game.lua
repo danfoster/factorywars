@@ -2,6 +2,7 @@ local Class = require("hump.class")
 local Camera = require("hump.camera")
 local Robot = require("classes.robot")
 local Card = require("classes.card")
+local Deck = require("classes.deck")
 local Networking = require("classes.networking")
 local Level = require("classes.level")
 
@@ -21,20 +22,15 @@ function Game:init()
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive()
-    self.deck = {}
+    self.cards = {}
     for k,v in pairs(data['value']) do
-        table.insert(self.deck, Card(v['priority'], v['program']))
+        table.insert(self.cards, Card(v['priority'], v['program']))
     end
-    -- for k,v in pairs(self.deck) do
-        -- for ke,ve in pairs(v) do
-            -- print(ke, ve)
-        -- end
-    -- end
+    self.deck = Deck(self.cards)
     self.networking:send('{ "command": ' .. ClientCommands.MyNameIs .. ', "value": "my local client" }')
     self.networking:close()
     
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
-    self.fCard = Card(1, 1)
 end
 
 function Game:turn()
