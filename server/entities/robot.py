@@ -11,6 +11,7 @@ class Robot:
         self.damage = 0
         self.lives = 3
         self.powerDown = False
+        self.registers = [None for x in range(0,5)]
 
     # returns the position the robot would be in if the given forward distance were applied
     def move(self, distance):

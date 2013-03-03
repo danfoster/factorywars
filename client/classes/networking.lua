@@ -10,10 +10,11 @@ ServerCommands = {ProgramDeck = 0,
                   DamageRobot = 4}
 
 ClientCommands = {MyNameIs = 0,
-                  ArrangeProgramCard = 1,
-                  ClearProgramCardArrangement = 2,
-                  PlayOptionCard = 3,
-                  PowerDownNextTurn = 4}
+                  SetRegister = 10,
+                  ClearRegister = 11,
+                  ClearRegisters = 12,
+                  PlayOptionCard = 20,
+                  PowerDownNextTurn = 30}
 
 local Networking = Class {
 }

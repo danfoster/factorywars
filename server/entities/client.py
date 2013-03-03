@@ -33,6 +33,16 @@ class Client(LineReceiver):
         if message.command == ClientCommands.MyNameIs:
             self.nickname = message.value
 
+        elif message.command == ClientCommands.SetRegister:
+            self.robot.registers[message.value['register']] = message.value['programCardId']
+
+        elif message.command == ClientCommands.ClearRegister:
+            self.robot.registers[message.value['register']] = None
+
+        elif message.command == ClientCommands.ClearRegisters:
+            for register in self.robot.registers:
+                register = None
+
 
 class ClientFactory(Factory):
     def __init__(self,game):
