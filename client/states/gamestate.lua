@@ -10,12 +10,7 @@ function GameState:draw()
 end
 
 function GameState:update(dt)
-    if self.game.updatingView then
-        self.game.cam.x = self.game.cam.x - (love.mouse.getX() - self.game.oldMouseX)/self.game.cam.scale 
-        self.game.cam.y = self.game.cam.y - (love.mouse.getY() - self.game.oldMouseY)/self.game.cam.scale
-        self.game.oldMouseX = love.mouse.getX()
-        self.game.oldMouseY = love.mouse.getY()
-    end
+    self.game:update()
 end
 
 

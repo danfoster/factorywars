@@ -18,7 +18,7 @@ function Game:init()
     
     
     -- test code
-    local host, port = "127.0.0.1", 1234
+    local host, port = "10.11.12.176", 1234
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive() 
@@ -31,6 +31,7 @@ function Game:init()
     end
     self.networking:send({ command= ClientCommands.MyNameIs , value= "my local client" })
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
+    self.networking:setTimeout(0.001)
 end
 
 function Game:turn()
@@ -72,6 +73,28 @@ function Game:draw()
     
     self.cam:detach()
 
+end
+
+function Game:update()
+    -- Receive Network Commands
+    local data = self.networking:receive() 
+    if data then
+        if data['command'] == ServerCommands.DealProgramCards then
+            for k,v in pairs(data['value']) do
+                print(k,v)
+            end
+        else
+            print("WARNING: Received unknown server command: " .. data['command'])
+        end
+    end
+
+    -- Update Camera
+    if self.updatingView then
+        self.cam.x = self.cam.x - (love.mouse.getX() - self.oldMouseX)/self.cam.scale 
+        self.cam.y = self.cam.y - (love.mouse.getY() - self.oldMouseY)/self.cam.scale
+        self.oldMouseX = love.mouse.getX()
+        self.oldMouseY = love.mouse.getY()
+    end
 end
 
 function Game:quit()
