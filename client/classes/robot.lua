@@ -1,4 +1,6 @@
 local Class = require("hump.class")
+local Vector = require("hump.vector")
+local easing = require("easing.easing")
 
 local Robot = Class {
 }
@@ -6,10 +8,24 @@ local Robot = Class {
 local direction = {right = 0, up = 1, left = 2, down = 3}
 
 local vectors = {
-    [0] = { 1,  0},
-    [1] = { 0,  1},
-    [2] = {-1,  0},
-    [3] = { 0, -1},
+    [0] = Vector( 1,  0),
+    [1] = Vector( 0,  1),
+    [2] = Vector(-1,  0),
+    [3] = Vector( 0, -1),
+}
+
+Robot.animations = {
+    wait       = {1, "", function(t, o) return 0, 0, 0 end},
+
+    turnRight  = {1, "", function(t, o) return 0, 0,  1 * t end},
+    turnLeft   = {1, "", function(t, o) return 0, 0, -1 * t end},
+    turnAround = {1, "", function(t, o) return 0, 0, -2 * t end},
+
+    graceStartF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.inCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStartB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.inCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
+
+    graceStopF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.outCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStopB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.outCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
 }
 
 function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
@@ -27,7 +43,7 @@ function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
 
     -- see animation notes.txt in assets
     self.animation = {
-        type = "gracefulStartForward",
+        type = "graceStartF",
         time = 0,
     }
 end
@@ -37,106 +53,38 @@ function Robot:update(dt)
 end
 
 function Robot:animate(dt)
-    self.animation.time = math.min(self.animation.time + dt, 1)
+    local duration, image, easing = unpack(self.animations[self.animation.type])
 
-    if self.animation.time == 1 then
-        self.actions[self.animation.type](self)
+    self.animation.time = math.min(self.animation.time + dt, duration)
+
+    if self.animation.time == duration then
+        local dx, dy, do_ = easing(1, self.orientation)
+
+        self.x, self.y = self.x + dx, self.y + dy 
+        self.orientation = self.orientation + do_
+
+        self.animation.time = 0
+
+        if self.animation.type == "graceStartF" then
+            self.animation.type = "graceStopF"
+        else
+            self.animation.type = "wait"
+        end
     end
 end
 
 function Robot:draw()
-    self.animations[self.animation.type](self, self.animation.time)
-end
+    local duration, image, easing = unpack(self.animations[self.animation.type])
+    local dx, dy, do_ = easing(self.animation.time / duration, self.orientation)
 
-Robot.animations = {}
-Robot.actions = {}
+    local x, y = self.x + dx, self.y + dy
+    local orientation = self.orientation + do_
 
-function Robot.actions:wait()
-end
-
-function Robot.animations:wait(time)
-    local x, y = self.x, self.y
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * self.orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
-end
-
-function Robot.actions:turnLeft()
-    self.orientation = (self.orientation - 1) % 4
-end
-
-function Robot.animations:turnLeft(time)
-    local x, y = self.x, self.y
-    local orientation = self.orientation - time
-
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
-end
-
-function Robot.actions:turnRight()
-    self.orientation = (self.orientation + 1) % 4
-end
-
-function Robot.animations:turnRight(time)
-    local x, y = self.x, self.y
-    local orientation = self.orientation + time
-
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
-end
-
-function Robot.actions:turnAround()
-    self.orientation = (self.orientation + 2) % 4
-end
-
-function Robot.animations:turnAround(time)
-    local x, y = self.x, self.y
-    local orientation = self.orientation + 2 * time
-
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
-end
-
-function Robot.actions:gracefulStartForward()
-    self.animation = {type = "gracefulStopForward", time = 0}
-end
-
-function Robot.animations:gracefulStartForward(time)
-    local dx, dy = unpack(vectors[self.orientation])
-    local x, y = self.x + dx / 2 * time, self.y + dy / 2 * time
-
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * self.orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
-end
-
-function Robot.actions:gracefulStartBackwards()
-end
-
-function Robot.animations:gracefulStartBackwards(time)
-    local dx, dy = unpack(vectors[self.orientation])
-    local x, y = self.x - dx / 2 * time, self.y - dy / 2 * time
-
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * self.orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
-end
-
-function Robot.actions:gracefulStopForward()
-    local dx, dy = unpack(vectors[self.orientation])
-
-    self.x, self.y = self.x + dx, self.y + dy
-end
-
-function Robot.animations:gracefulStopForward(time)
-    local dx, dy = unpack(vectors[self.orientation])
-    local x, y = self.x + dx / 2 * (time + 1), self.y + dy / 2 * (time + 1)
-
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * self.orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
-end
-
-function Robot.actions:gracefulStopBackwards()
-    local dx, dy = vectors[self.orientation]
-
-    self.x, self.y = self.x - dx, self.y - dy
-end
-
-function Robot.animations:gracefulStopBackwards(time)
-    local dx, dy = unpack(vectors[self.orientation])
-    local x, y = self.x - dx / 2 * (time + 1), self.y - dy / 2 * (time + 1)
-
-    love.graphics.draw(self.icon, (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight, (math.pi * 2 / 4) * self.orientation, 1, 1, self.tileWidth / 2, self.tileHeight / 2)
+    love.graphics.draw(self.icon, 
+                       (x + 0.5) * self.tileWidth, (y + 0.5) * self.tileHeight,
+                       orientation * (math.pi * 2 / 4), 
+                       1, 1, 
+                       self.tileWidth / 2, self.tileHeight / 2)
 end
 
 return Robot
