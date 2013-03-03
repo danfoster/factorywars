@@ -47,13 +47,13 @@ function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
 
     -- see animation notes.txt in assets
     self.animation = {
-        type = "graceStartF",
+        type = "wait",
         time = 0,
     }
 end
 
 function Robot:update(dt)
-    self:animate(dt)
+    return self:animate(dt)
 end
 
 function Robot:animate(dt)
@@ -64,21 +64,13 @@ function Robot:animate(dt)
     if self.animation.time == duration then
         local dx, dy, do_ = easing(1, self.orientation)
 
-        self.x, self.y = self.x + dx, self.y + dy 
+        self.x, self.y = self.x + dx, self.y + dy
         self.orientation = self.orientation + do_
 
-        self.animation.time = 0
-
-        if self.animation.type == "graceStartF" then
-            self.animation.type = "continueF"
-        elseif self.animation.type == "continueF" then
-            self.animation.type = "graceStopF"
-        elseif self.animation.type == "graceStopF" then
-            self.animation.type = "turnAround"
-        else
-            self.animation.type = "wait"
-        end
+        self.animation.type = "wait"
     end
+
+    return self.animation.type == "wait"
 end
 
 function Robot:draw()
@@ -93,6 +85,11 @@ function Robot:draw()
                        orientation * (math.pi * 2 / 4), 
                        1, 1, 
                        self.tileWidth / 2, self.tileHeight / 2)
+end
+
+function Robot:order(action)
+    self.animation.time = 0
+    self.animation.type = action
 end
 
 return Robot

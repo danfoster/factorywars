@@ -46,6 +46,14 @@ function Game:init(host, port, nickname)
     self.client = Client(self.deck)
 
     self.hud = Hud(self.client)
+    
+    self.queue = {
+        "graceStartF",
+        "continueF",
+        "graceStopF",
+        "turnAround",
+        "wait",
+    }
 end
 
 function Game:executeCard(card, robot)
@@ -85,7 +93,10 @@ end
 function Game:update(dt)
     if dt > 0.1 then dt = 0.1 end
 
-    self.robot:update(dt)
+    if self.robot:update(dt) and #self.queue > 0 then
+        self.robot:order(self.queue[1])
+        table.remove(self.queue, 1)
+    end
 
     -- Receive Network Commands
     local data = self.networking:receive() 
