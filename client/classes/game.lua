@@ -10,7 +10,7 @@ local Client = require("classes.client")
 local Game = Class {
 }
 
-function Game:init()
+function Game:init(host, port)
     self.cam = Camera()
     self.level = Level()
     self.updatingView = false
@@ -19,7 +19,8 @@ function Game:init()
     
     
     -- test code
-    local host, port = "localhost", 1234
+    local port = port or 1234
+    local host = host or "localhost"
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive() 

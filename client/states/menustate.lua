@@ -1,5 +1,4 @@
 local Gamestate = require("hump.gamestate")
-local Game = require("classes.game")
 
 function MenuState:init()
 end
@@ -40,8 +39,7 @@ function MenuState:keypressed(key)
         end
     elseif key == "return" then
         if self.menu.currentMenuItem == 1 then -- quit
-            GameState.game = Game()
-            Gamestate.switch(GameState)
+            Gamestate.switch(LobbyState)
         elseif self.menu.currentMenuItem == 3 then -- quit
             love.event.quit()
         end
