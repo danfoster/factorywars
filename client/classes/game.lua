@@ -20,7 +20,11 @@ function Game:init(host, port)
     
     -- test code
     local port = port or 1234
-    local host = host or "localhost"
+    if host == '' then
+        host = "localhost"
+    end
+
+    print('Connecting to ' .. host .. ' on port ' .. port)
     self.networking = Networking()
     self.networking:connect(host, port)
     local data = self.networking:receive() 
