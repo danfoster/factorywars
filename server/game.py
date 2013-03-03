@@ -8,7 +8,7 @@ class Game:
         self.clients = []
         
         # test code
-        robot = Robot(1, 1, Robot.Dir.RIGHT)
+        robot = Robot(1, 1, Direction.Right)
         print(robot.x)
         print(robot.move(1))
 

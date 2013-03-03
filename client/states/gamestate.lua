@@ -38,29 +38,7 @@ function GameState:mousereleased(x,y,button)
 end
 
 function GameState:keypressed(key)
-    local x = self.game.robot.x
-    local y = self.game.robot.y
-    local o = self.game.robot.orient
-    if key == "w" then
-        x,y = self.game.robot:move(1)
-    elseif key == "a" then
-        x,y = self.game.robot:move(0, -1)
-    elseif key == "s" then
-        o = self.game.robot:rotate(2)
-    elseif key == "d" then
-        x,y = self.game.robot:move(0, 1)
-    elseif key == "q" then
-        o = self.game.robot:rotate(-1)
-    elseif key == "e" then
-        o = self.game.robot:rotate(1)
-    elseif key == "i" then
-        self.game:executeCard(self.game.fCard, self.game.robot)
-        x = self.game.robot.x
-        y = self.game.robot.y
-    end
-    self.game.robot.x = x
-    self.game.robot.y = y
-    self.game.robot.orient = o
+    
 end
 
 
