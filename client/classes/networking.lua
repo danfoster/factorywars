@@ -32,7 +32,6 @@ function Networking:connect(host, port)
         print('connected to server')
     else
         print('error connecting to server: ' .. statusString)
-        love.event.quit()
     end
 end
 

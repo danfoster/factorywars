@@ -10,7 +10,7 @@ function GameState:draw()
 end
 
 function GameState:update(dt)
-    self.game:update()
+    self.game:update(dt)
 end
 
 

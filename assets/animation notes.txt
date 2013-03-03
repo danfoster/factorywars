@@ -1,0 +1,37 @@
+-- simplified --
+wait /
+turn left /
+turn right /
+turn around /
+graceful start forward /
+graceful start backward /
+graceful stop forward
+graceful stop backward
+continue forward
+continue backward
+-- ignore for now --
+pushed forward
+pushed backward
+pushed left
+pushed right
+
+-- old --
+wait
+forward (success/fail) (push/pushed/nothing)
+backward (success/fail) (push/pushed/nothing)
+turn left (gear/not)
+turn right (gear/not)
+u-turn
+swing left
+swing right
+strafe left (success/fail) (push/pushed/nothing)
+strafe right (success/fail) (push/pushed/nothing)
+fire -- this will be deferred to the weapon object/card perhaps?
+special -- the random weapon effect etc
+damage (type) -- e.g fire / laser / etc
+archive
+repair
+spawn
+boot
+shutdown
+falling
