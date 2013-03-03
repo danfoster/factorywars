@@ -1,4 +1,4 @@
-from entities.robot import Robot
+from entities.robot import Robot, Direction
 from entities.deck import Deck
 
 class Game:

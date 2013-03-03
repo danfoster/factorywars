@@ -28,5 +28,5 @@ class Robot:
         return x,y
 
     # returns the orientation the robot would be in if rotated by the given amount
-    def rotate(self, amount)
+    def rotate(self, amount):
         return ((self.orient + amount - 1) % 4) + 1
