@@ -6,6 +6,7 @@ local Deck = require("classes.deck")
 local Networking = require("classes.networking")
 local Level = require("classes.level")
 local Client = require("classes.client")
+local Hud = require("classes.hud")
 
 local Game = Class {
 }
@@ -43,6 +44,8 @@ function Game:init(host, port, nickname)
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
     self.networking:setTimeout(0.001)
     self.client = Client(self.deck)
+
+    self.hud = Hud(self.client)
 end
 
 function Game:executeCard(card, robot)
@@ -75,6 +78,8 @@ function Game:draw()
     self.robot:draw()
     
     self.cam:detach()
+
+    self.hud:draw()
 end
 
 function Game:update(dt)

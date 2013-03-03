@@ -12,6 +12,7 @@ function Level:init()
 end
 
 function Level:draw()
+    love.graphics.setColor(255,255,255,255)
     self.level:draw()
 end
 
