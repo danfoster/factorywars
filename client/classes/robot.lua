@@ -21,6 +21,7 @@ Robot.animations = {
     turnLeft   = {1, "", function(t, o) return 0, 0, -1 * t end},
     turnAround = {1, "", function(t, o) return 0, 0, -2 * t end},
 
+    -- for quadratic x = t^2 so at t=1, dx/dt = 2.t i.e it takes half a second to move a tile
     graceStartF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.inQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
     graceStartB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.inQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
 
