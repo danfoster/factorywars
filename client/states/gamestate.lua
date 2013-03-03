@@ -42,3 +42,10 @@ function GameState:keypressed(key)
 end
 
 
+function GameState:leave()
+    self.game:quit()
+end
+
+function GameState:quit()
+    self.game:quit()
+end

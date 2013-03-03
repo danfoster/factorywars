@@ -19,12 +19,18 @@ local Networking = Class {
 }
 
 function Networking:init()
-    
+    tcp:settimeout(1)    
+
 end
 
 function Networking:connect(host, port)
-    tcp:connect(host, port);
-    print('connected to server')
+    local status,statusString = tcp:connect(host, port);
+    if status then
+        print('connected to server')
+    else
+        print('error connecting to server: ' .. statusString)
+        love.event.quit()
+    end
 end
 
 function Networking:close()
@@ -39,7 +45,11 @@ end
 
 function Networking:receive()
     local s, status, partial = tcp:receive()
-    print('received data from server')
+    if s == nil then
+        print('error receiving data: ' .. status)
+        love.event.quit()
+        return s
+    end
     return json.decode(s)
 end
 

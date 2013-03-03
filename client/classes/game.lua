@@ -21,15 +21,15 @@ function Game:init()
     local host, port = "127.0.0.1", 1234
     self.networking = Networking()
     self.networking:connect(host, port)
-    local data = self.networking:receive()
-    self.cards = {}
-    for k,v in pairs(data['value']) do
-        table.insert(self.cards, Card(v['priority'], v['program']))
+    local data = self.networking:receive() 
+    if data then
+        self.cards = {}
+        for k,v in pairs(data['value']) do
+            table.insert(self.cards, Card(v['priority'], v['program']))
+        end
+        self.deck = Deck(self.cards)
     end
-    self.deck = Deck(self.cards)
     self.networking:send('{ "command": ' .. ClientCommands.MyNameIs .. ', "value": "my local client" }')
-    self.networking:close()
-    
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
 end
 
@@ -73,5 +73,10 @@ function Game:draw()
     self.cam:detach()
 
 end
+
+function Game:quit()
+    self.networking:close()
+end
+
 return Game
 
