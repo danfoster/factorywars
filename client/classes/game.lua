@@ -81,7 +81,6 @@ function Game:update(dt)
     if dt > 0.1 then dt = 0.1 end
 
     self.robot:update(dt)
-    print("updating")
 
     -- Receive Network Commands
     local data = self.networking:receive() 
