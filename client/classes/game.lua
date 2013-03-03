@@ -29,7 +29,7 @@ function Game:init()
         end
         self.deck = Deck(self.cards)
     end
-    self.networking:send('{ "command": ' .. ClientCommands.MyNameIs .. ', "value": "my local client" }')
+    self.networking:send({ command= ClientCommands.MyNameIs , value= "my local client" })
     self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
 end
 

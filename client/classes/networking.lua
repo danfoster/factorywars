@@ -39,7 +39,7 @@ function Networking:close()
 end
 
 function Networking:send(data)
-    tcp:send(data .. '\r\n')
+    tcp:send(json.encode(data) .. '\r\n')
     print('sent data to server')
 end
 
