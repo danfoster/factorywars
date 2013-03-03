@@ -21,11 +21,14 @@ Robot.animations = {
     turnLeft   = {1, "", function(t, o) return 0, 0, -1 * t end},
     turnAround = {1, "", function(t, o) return 0, 0, -2 * t end},
 
-    graceStartF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.inCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
-    graceStartB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.inCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStartF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.inQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStartB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.inQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
 
-    graceStopF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.outCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
-    graceStopB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.outCubic(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStopF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.outQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStopB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.outQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
+
+    continueF = {0.5, "", function(t, o) local x, y = ( vectors[o] * t):unpack() return x, y, 0 end},
+    continueB = {0.5, "", function(t, o) local x, y = (-vectors[o] * t):unpack() return x, y, 0 end},
 }
 
 function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
@@ -66,6 +69,8 @@ function Robot:animate(dt)
         self.animation.time = 0
 
         if self.animation.type == "graceStartF" then
+            self.animation.type = "continueF"
+        elseif self.animation.type == "continueF" then
             self.animation.type = "graceStopF"
         else
             self.animation.type = "wait"
