@@ -90,6 +90,8 @@ end
 function Game:_handleNetworkCommand(command,value)
     if command == ServerCommands.DealProgramCards then
         self.client:receiveHand(value)
+    elseif command == ServerCommands.ServerMessage then
+        self.client:serverMessage(value)
     else
         print("WARNING: Received unknown server command: " .. data['command'])
     end

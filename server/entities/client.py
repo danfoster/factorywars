@@ -37,7 +37,8 @@ class Client(LineReceiver):
         elif message.command == ClientCommands.SetRegister:
             cardId = message.value['programCardId']
             if cardId not in self.hand:
-                raise 'Client just tried to send card \'%s\' not in their hand' % cardId
+                self.sendLine(utils.toJSON(Command(ServerCommands.ServerMessage, 'You just tried to send card ID \'%s\'. This card was not in your hand.' % cardId)))
+                return
 
             self.robot.registers[message.value['register']] = cardId
 

@@ -15,5 +15,8 @@ function Client:receiveHand(cards)
     end
 end
 
+function Client:serverMessage(message)
+    print('Server: ' .. message)
+end
 
 return  Client
