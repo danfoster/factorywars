@@ -17,16 +17,16 @@ local vectors = {
 Robot.animations = {
     wait       = {1, "", function(t, o) return 0, 0, 0 end},
 
-    turnRight  = {1, "", function(t, o) return 0, 0,  1 * t end},
-    turnLeft   = {1, "", function(t, o) return 0, 0, -1 * t end},
-    turnAround = {1, "", function(t, o) return 0, 0, -2 * t end},
+    turnRight  = {1, "", function(t, o) return 0, 0, easing.inOutQuad(t, 0,  1, 1) end},
+    turnLeft   = {1, "", function(t, o) return 0, 0, easing.inOutQuad(t, 0, -1, 1) end},
+    turnAround = {1, "", function(t, o) return 0, 0, easing.inOutQuad(t, 0, -2, 1) end},
 
     -- for quadratic x = t^2 so at t=1, dx/dt = 2.t i.e it takes half a second to move a tile
-    graceStartF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.inQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
-    graceStartB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.inQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStartF = {0.5, "", function(t, o) local x, y = ( vectors[o] * easing.inQuad(t, 0, 0.5, 1)):unpack() return x, y, 0 end},
+    graceStartB = {0.5, "", function(t, o) local x, y = (-vectors[o] * easing.inQuad(t, 0, 0.5, 1)):unpack() return x, y, 0 end},
 
-    graceStopF = {0.5, "", function(t, o) local x, y = ( vectors[o] / 2 * easing.outQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
-    graceStopB = {0.5, "", function(t, o) local x, y = (-vectors[o] / 2 * easing.outQuad(t, 0, 1, 1)):unpack() return x, y, 0 end},
+    graceStopF = {0.5, "", function(t, o) local x, y = ( vectors[o] * easing.outQuad(t, 0, 0.5, 1)):unpack() return x, y, 0 end},
+    graceStopB = {0.5, "", function(t, o) local x, y = (-vectors[o] * easing.outQuad(t, 0, 0.5, 1)):unpack() return x, y, 0 end},
 
     continueF = {0.5, "", function(t, o) local x, y = ( vectors[o] * t):unpack() return x, y, 0 end},
     continueB = {0.5, "", function(t, o) local x, y = (-vectors[o] * t):unpack() return x, y, 0 end},
@@ -73,6 +73,8 @@ function Robot:animate(dt)
             self.animation.type = "continueF"
         elseif self.animation.type == "continueF" then
             self.animation.type = "graceStopF"
+        elseif self.animation.type == "graceStopF" then
+            self.animation.type = "turnAround"
         else
             self.animation.type = "wait"
         end
