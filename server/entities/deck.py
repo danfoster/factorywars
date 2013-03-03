@@ -1,5 +1,7 @@
 from entities.card import Card, Program
 
+import random
+
 class Deck:
 
     def __init__(self):
@@ -26,7 +28,10 @@ class Deck:
             self.deck.append(Card(i * 10, program))
 
     def dealCard(self):
-        card = self.deck.pop()
+        if len(self.deck) < 1:
+            raise 'Empty deck, this shouldn\'t happen!'
+
+        card = self.deck.pop(random.randint(0, len(self.deck)))
         self.dealt.append(card)
         return card
 
