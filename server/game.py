@@ -6,14 +6,12 @@ class Game:
     def __init__(self):
         self.deck = Deck()
         self.clients = []
-        
-        # test code
+        self.robots = []
+
+    def addClient(self, client):
         robot = Robot(1, 1, Direction.Right)
-        print(robot.x)
-        print(robot.move(1))
 
-    def addClient(self,client):
+        self.robots.append(robot)
+        client.robot = robot
+
         self.clients.append(client)
-
-
-

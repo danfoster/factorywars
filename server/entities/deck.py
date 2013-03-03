@@ -3,8 +3,10 @@ from entities.card import Card, Program
 class Deck:
 
     def __init__(self):
-        self.cards = []
-        self.buildDeck()
+        self.deck = []
+        self.dealt = []
+
+        self.newRound()
 
     def buildDeck(self):
         for i in range(1,85):
@@ -21,8 +23,17 @@ class Deck:
             else:
                 program = Program.Move3
 
-            self.cards.append(Card(i * 10, program))
+            self.deck.append(Card(i * 10, program))
+
+    def dealCard(self):
+        card = self.deck.pop()
+        self.dealt.append(card)
+        return card
 
     def getDeck(self):
-        #Test code
-        return self.cards
+        return self.deck
+
+    def newRound(self):
+        self.deck = []
+        self.dealt = []
+        self.buildDeck()
