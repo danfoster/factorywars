@@ -3,11 +3,11 @@ local Menu = require("classes.menu")
 local Gamestate = require("hump.gamestate")
 
 MenuState = {}
-GameState = {}
+PlayState = {}
 LobbyState = {}
 
 require("states.menustate")
-require("states.gamestate")
+require("states.playstate")
 require("states.lobbystate")
 
 function love.load()

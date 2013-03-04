@@ -45,8 +45,8 @@ function LobbyState:keypressed(key, unicode)
         if self.editing == 1 then
             self.editing = 2
         else
-            GameState.game = Game(self.strings[1], nil, self.strings[2])
-            Gamestate.switch(GameState)
+            PlayState.game = Game(self.strings[1], nil, self.strings[2])
+            Gamestate.switch(PlayState)
         end
     end
 end

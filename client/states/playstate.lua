@@ -1,20 +1,20 @@
-function GameState:init()
+function PlayState:init()
 end
 
 
-function GameState:enter()
+function PlayState:enter()
 end
 
-function GameState:draw()
+function PlayState:draw()
     self.game:draw()
 end
 
-function GameState:update(dt)
+function PlayState:update(dt)
     self.game:update(dt)
 end
 
 
-function GameState:mousepressed(x,y,button)
+function PlayState:mousepressed(x,y,button)
     if button == 'r' then
         self.game.updatingView = true
         self.game.oldMouseX = x
@@ -26,21 +26,21 @@ function GameState:mousepressed(x,y,button)
     end
 end
 
-function GameState:mousereleased(x,y,button)
+function PlayState:mousereleased(x,y,button)
     if button == 'r' then
         self.game.updatingView = false
     end
 end
 
-function GameState:keypressed(key)
+function PlayState:keypressed(key)
     
 end
 
 
-function GameState:leave()
+function PlayState:leave()
     self.game:quit()
 end
 
-function GameState:quit()
+function PlayState:quit()
     self.game:quit()
 end
