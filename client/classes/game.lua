@@ -67,24 +67,6 @@ function Game:init(host, port, nickname)
                                 "graceStopF")
 end
 
-function Game:executeCard(card, robot)
-    if card.forward ~= 0 then
-        local absolute = math.abs(card.forward)
-        for i = 1, absolute do
-            x, y = robot:move(card.forward / absolute)
-            -- TODO: function for checking collisions
-            robot.x = x
-            robot.y = y
-        end
-    end
-    -- TODO: strafing
-    if card.rotate ~= 0 then
-        -- could do this in 90 degree increments if we want
-        o = robot:rotate(card.rotate)
-        robot.orient = o
-    end
-end
-
 function Game:draw()
     self.cam:attach()
     local camWorldWidth = love.graphics.getWidth() / self.cam.scale
