@@ -41,19 +41,30 @@ function Game:init(host, port, nickname)
         self.deck = Deck(cards)
     end
     self.networking:send({ command= ClientCommands.MyNameIs , value= nickname })
-    self.robot = Robot(2, 2, 1,nil,self.level.level.tileWidth, self.level.level.tileHeight)
     self.networking:setTimeout(0.001)
     self.client = Client(self.deck)
 
     self.hud = Hud(self.client)
+
+    self.robots = {}
+    self.actor = nil
+    self.actionQueue = {}
     
-    self.queue = {
-        "graceStartF",
-        "continueF",
-        "graceStopF",
-        "turnAround",
-        "wait",
-    }
+    -- animation test code
+    local robot1 = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+    local robot2 = Robot(3, 2, 0, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+
+    self.robots[robot1] = true
+    self.robots[robot2] = true
+
+    self:enqueueActions(robot1, "graceStartF",
+                                "continueF",
+                                "graceStopF",
+                                "turnAround")
+    self:enqueueActions(robot2, "graceStartF",
+                                "graceStopF")
+    self:enqueueActions(robot1, "graceStartF",
+                                "graceStopF")
 end
 
 function Game:executeCard(card, robot)
@@ -83,7 +94,10 @@ function Game:draw()
     self.level.level:setDrawRange(camWorldX, camWorldY, camWorldWidth, camWorldHeight)
 
     self.level:draw()
-    self.robot:draw()
+    
+    for robot in pairs(self.robots) do
+        robot:draw()
+    end
     
     self.cam:detach()
 
@@ -93,10 +107,11 @@ end
 function Game:update(dt)
     if dt > 0.1 then dt = 0.1 end
 
-    if self.robot:update(dt) and #self.queue > 0 then
-        self.robot:order(self.queue[1])
-        table.remove(self.queue, 1)
+    for robot in pairs(self.robots) do
+        robot:update(dt)
     end
+
+    self:executeActions()
 
     -- Receive Network Commands
     local data = self.networking:receive() 
@@ -126,6 +141,21 @@ end
 
 function Game:quit()
     self.networking:close()
+end
+
+function Game:enqueueActions(robot, ...)
+    for i, action in ipairs(arg) do
+        table.insert(self.actionQueue, {robot, action})
+    end
+end
+
+function Game:executeActions()
+    if (not self.actor or self.actor.animation.type == "wait") and #self.actionQueue > 0 then
+        local robot, order = unpack(table.remove(self.actionQueue, 1))
+
+        self.actor = robot
+        self.actor:order(order)
+    end
 end
 
 return Game

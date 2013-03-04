@@ -53,7 +53,7 @@ function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
 end
 
 function Robot:update(dt)
-    return self:animate(dt)
+    self:animate(dt)
 end
 
 function Robot:animate(dt)
@@ -65,12 +65,10 @@ function Robot:animate(dt)
         local dx, dy, do_ = easing(1, self.orientation)
 
         self.x, self.y = self.x + dx, self.y + dy
-        self.orientation = self.orientation + do_
+        self.orientation = (self.orientation + do_) % 4
 
         self.animation.type = "wait"
     end
-
-    return self.animation.type == "wait"
 end
 
 function Robot:draw()
