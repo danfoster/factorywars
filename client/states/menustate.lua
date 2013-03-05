@@ -1,5 +1,7 @@
 local Gamestate = require("hump.gamestate")
 
+local MenuState = {}
+
 function MenuState:init()
 end
 
@@ -47,4 +49,4 @@ function MenuState:keypressed(key)
     
 end
 
-
+return MenuState

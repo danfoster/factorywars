@@ -1,6 +1,8 @@
 local Gamestate = require("hump.gamestate")
 local Game = require("classes.game")
 
+local LobbyState = {}
+
 function LobbyState:init()
     self.editing = 1
     self.strings = {"", ""}
@@ -50,3 +52,5 @@ function LobbyState:keypressed(key, unicode)
         end
     end
 end
+
+return LobbyState

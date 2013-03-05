@@ -2,13 +2,9 @@ local Class = require("hump.class")
 local Menu = require("classes.menu")
 local Gamestate = require("hump.gamestate")
 
-MenuState = {}
-PlayState = {}
-LobbyState = {}
-
-require("states.menustate")
-require("states.playstate")
-require("states.lobbystate")
+MenuState = require("states.menustate")
+PlayState = require("states.playstate")
+LobbyState = require("states.lobbystate")
 
 function love.load()
     fontTitle = love.graphics.newFont("data/fonts/Spac3 halftone.ttf", 55)

@@ -1,3 +1,7 @@
+local Gamestate = require("hump.gamestate")
+
+local PlayState = {}
+
 function PlayState:init()
 end
 
@@ -44,3 +48,5 @@ end
 function PlayState:quit()
     self.game:quit()
 end
+
+return PlayState
