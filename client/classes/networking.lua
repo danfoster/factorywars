@@ -3,6 +3,8 @@ local socket=require ("socket")
 local tcp = assert(socket.tcp())
 require("json.json")
 
+local Gamestate = require("hump.gamestate")
+
 ServerCommands = {
     ServerMessage = 0,
     ChatMessage = 1,
@@ -38,6 +40,7 @@ function Networking:connect(host, port)
         print('connected to server')
     else
         print('error connecting to server: ' .. statusString)
+        Gamestate.switch(MenuState)
     end
 end
 

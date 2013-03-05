@@ -1,5 +1,6 @@
 local Class = require("hump.class")
 local Menu = require("classes.menu")
+
 local Gamestate = require("hump.gamestate")
 
 MenuState = require("states.menustate")

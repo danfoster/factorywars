@@ -5,7 +5,6 @@ local PlayState = {}
 function PlayState:init()
 end
 
-
 function PlayState:enter()
 end
 
@@ -16,7 +15,6 @@ end
 function PlayState:update(dt)
     self.game:update(dt)
 end
-
 
 function PlayState:mousepressed(x,y,button)
     if button == 'r' then
@@ -37,12 +35,9 @@ function PlayState:mousereleased(x,y,button)
 end
 
 function PlayState:keypressed(key)
-    
 end
 
-
 function PlayState:leave()
-    self.game:quit()
 end
 
 function PlayState:quit()

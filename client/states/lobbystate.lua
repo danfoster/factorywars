@@ -33,6 +33,7 @@ function LobbyState:draw()
 end
 
 function LobbyState:enter()
+    self.editing = 1
 end
 
 function LobbyState:leave()
@@ -47,8 +48,8 @@ function LobbyState:keypressed(key, unicode)
         if self.editing == 1 then
             self.editing = 2
         else
-            PlayState.game = Game(self.strings[1], nil, self.strings[2])
             Gamestate.switch(PlayState)
+            PlayState.game = Game(self.strings[1], nil, self.strings[2])
         end
     end
 end

@@ -38,7 +38,7 @@ function GS.switch(to, ...)
 	current:leave()
 	local pre = current
 	to:init()
-	to.init = nil
+	to.init = __NULL__
 	current = to
 	return current:enter(pre, ...)
 end
