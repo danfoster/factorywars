@@ -6,6 +6,7 @@ function PlayState:init()
 end
 
 function PlayState:enter()
+    loveframes.SetState("none")
 end
 
 function PlayState:draw()
