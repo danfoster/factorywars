@@ -4,6 +4,13 @@ local Game = require("classes.game")
 local LobbyState = {}
 
 function LobbyState:init()
+
+    loveframes.basicfont = fontDicks
+    local serverLabel = loveframes.Create("text")
+    serverLabel:SetText({{255, 255, 255, 255}, "Enter server IP"})
+    serverLabel:CenterX()
+    serverLabel:SetY(love.graphics.getHeight() / 3, true)
+    
     self.editing = 1
     self.strings = {"", ""}
     self.naivetimer = 0
@@ -25,7 +32,6 @@ function LobbyState:draw()
     printStrings[self.editing] = printStrings[self.editing] .. caret
     
     love.graphics.setFont(fontDicks)
-    love.graphics.printf("Enter server IP", 0, 140, love.graphics.getWidth(), 'center')
     love.graphics.printf(printStrings[1], 0, 200, love.graphics.getWidth(), 'center')
     
     love.graphics.printf("Enter your nickname", 0, 300, love.graphics.getWidth(), 'center')
