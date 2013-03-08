@@ -23,7 +23,7 @@ function MenuState:draw()
 end
 
 function MenuState:enter()
-    loveframes.SetState("none")
+    loveframes.SetState("menu")
 end
 
 function MenuState:leave()
