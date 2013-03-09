@@ -1,3 +1,42 @@
+-- pushing (shit is cray)
+
+--
+-- expecting server to send: <move, push (robot))...
+-- THIS GAME MAKES NO PHYSICAL SENSE AAAAAAAAAAAAAAAGH (ignore everything)
+--
+
+variable-continue-distance(robot1, robot2, empty) = 1.5 - robot1.radius - robot2.radius
+variable-continue-distance(robot1, robot2, pit)   = 1.0 - robot1.radius + pit-edge-size 
+
+    -- because
+    variable-continue-distance(robot1, robot2, pit) = variable-continue-distance(robot1, robot2, empty) - (0.5 - robot2.radius - pit-edge-size)
+    variable-continue-distance(robot1, robot2, pit) = 1.5 - robot1.radius - robot2.radius - 0.5 + robot2.radius + pit-edge-size
+    variable-continue-distance(robot1, robot2, pit) = 1.0 - robot1.radius + pit-edge-size
+
+variable-reverse-distance(robot1, robot2, empty) = variable-continue-distance(robot1, robot2, empty) - 0.5
+variable-reverse-distance(robot1, robot2, pit)   = variable-continue-distance(robot1, robot2, pit) - 0.5
+
+variable-reverse-distance(robot1, robot2, empty) = 1.0 - robot1.radius - robot2.radius
+variable-reverse-distance(robot1, robot2, pit)   = 0.5 - robot1.radius + pit-edge-size
+
+t_collide  = when robots touch during robot1's start = ...
+t_continue = after start                             = 0.5
+t_decel    = after variable-continue                 = t_continue + variable-continue-distance(robot1, robot2, type) / continue-speed
+t_stopped  = after stop                              = t_decel + 0.5
+
+continue-speed = 2 (tiles per second)
+
+t_collide = 0.00 <= t < 0.50 : 2.0 * math.sqrt((1 - robot1.radius - robot2.radius) / 4))
+            0.50 <= t < 0.75 : 0.75 - (robot1.radius + robot2.radius) / 2.0
+
+delay       robot1              robot2
+0           start               -
+t_collide   -                   link(robot1)
+t_continue  variable-continue   -
+t_decel     stop                -
+t_reverse   variable-reverse    unlink(robot1)
+t_done      -                   -
+
 -- simplified --
 wait /
 turn left /
