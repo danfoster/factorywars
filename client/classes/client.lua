@@ -32,8 +32,6 @@ function Client:receiveHand(player, cards)
 end
 
 function Client:setRegister(player, id, card)
-    print(Networking.ClientCommands.SetRegister)
-
     local message = {
         command = Networking.ClientCommands.SetRegister,
         value = {
