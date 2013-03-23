@@ -15,10 +15,8 @@ function Hud:draw()
 end
 
 function Hud:_drawHand()
-    i=0
-    for card in pairs(self.player.hand) do
-        self:_drawCard(10+(self.cardWidth+10)*i,love.graphics.getHeight()-self.cardHeight-10, card)
-        i = i +1
+    for i, card in pairs(self.player.hand) do
+        self:_drawCard(10+(self.cardWidth+10)*(i-1),love.graphics.getHeight()-self.cardHeight-10, card)
     end
 end
 

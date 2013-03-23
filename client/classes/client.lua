@@ -1,8 +1,11 @@
 local Class = require("hump.class")
 
+local Networking = require("classes.networking")
+
 local Client = Class {}
 
-function Client:init(deck)
+function Client:init(networking, deck)
+    self.networking = networking
     self.deck = deck
 
     self.players = {}
@@ -22,10 +25,28 @@ function Client:receiveHand(player, cards)
 
         print(i, card.program, card.priority)
     end
+
+    -- test
+    local card = player.hand[1]
+    self.players[1]:setRegister(1, card)
+end
+
+function Client:setRegister(player, id, card)
+    print(Networking.ClientCommands.SetRegister)
+
+    local message = {
+        command = Networking.ClientCommands.SetRegister,
+        value = {
+            registerId = id,
+            programCardId = card.id,
+        },
+    }
+
+    self.networking:send(message)
 end
 
 function Client:serverMessage(message)
     print('Server: ' .. message)
 end
 
-return  Client
+return Client

@@ -24,13 +24,17 @@ function Game:init(host, port, nickname)
     if host == '' then
         host = "localhost"
     end
-    if nickname == '' then
-        nickname = "a client"
-    end
+
+    if nickname == "" then nickname = false end
 
     print('Connecting to ' .. host .. ' on port ' .. port)
     self.networking = Networking()
     self.networking:connect(host, port)
+
+    self.client = Client(self.networking, self.deck)
+    local names = {"TP2k", "WildFire", "2kah", "Ragzouken", "IRConan", "Jith"}
+    local player = Player(self.client, nickname or names[math.random(1, 6)])
+    
     local data = self.networking:receive() 
     if data then
         local cards = {}
@@ -39,14 +43,10 @@ function Game:init(host, port, nickname)
             cards[card.id] = card
         end
         self.deck = Deck(cards)
+        self.client.deck = self.deck
     end
     self.networking:send({ command= ClientCommands.MyNameIs , value= nickname })
     self.networking:setTimeout(0.001)
-    
-    self.client = Client(self.deck)
-
-    local names = {"TP2k", "WildFire", "2kah", "Ragzouken", "IRConan", "Jith"}
-    local player = Player(names[math.random(1, 6)])
 
     self.client:addPlayer(player)
     self.hud = Hud(player)
