@@ -7,6 +7,7 @@ function Player:init(client, name)
     self.name = name
 
     self.hand = {}
+    self.registers = {false,false,false,false,false}
     self.robot = nil
 end
 
@@ -22,7 +23,8 @@ end
 function Player:removeCard(card)
     for i=1,9 do
         if self.hand[i] == card then 
-            self.hand[i] = nil
+            print("***",i)
+            self.hand[i] = false
             break
         end
     end

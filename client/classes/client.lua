@@ -6,6 +6,7 @@ local Client = Class {}
 
 function Client:init(networking, deck)
     self.networking = networking
+    self.hand = {}
     self.deck = deck
 
     self.players = {}

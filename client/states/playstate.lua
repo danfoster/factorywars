@@ -18,6 +18,7 @@ function PlayState:update(dt)
 end
 
 function PlayState:mousepressed(x,y,button)
+    self.game.hud:mousePressed(x,y,button)
     if button == 'r' then
         self.game.updatingView = true
         self.game.oldMouseX = x
