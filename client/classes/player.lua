@@ -34,7 +34,7 @@ function Player:setRegister(id, card)
     local replaced = self.robot:setRegister(id, card)
 
     if replaced then
-        self.hand[replaced] = true
+        Player:addCard(replaced)
     end
 
     self.client:setRegister(player, id, card)
@@ -46,7 +46,7 @@ function Player:clearRegister(id)
     local cleared = self.robot:setRegister(id, nil)
 
     if cleared then
-        self.hand[cleared] = true
+        self:addCard(cleared)
     end
 
     self.client:clearRegister(player, id)
