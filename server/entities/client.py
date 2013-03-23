@@ -23,7 +23,10 @@ class Client(LineReceiver):
         self.send(Command(ServerCommands.DealProgramCards, self.hand))
 
     def send(self, obj):
-        self.sendLine(utils.toJSON(obj))
+        json = utils.toJSON(obj)
+        if config.debug:
+            print 'sending to <%s>: %s' % (self.nickname, json)
+        self.sendLine(json)
 
         # TODO: remove this test code
         # set the first register to move 1
@@ -54,7 +57,7 @@ class Client(LineReceiver):
                 return
 
             self.robot.registers[message.value['register']] = cardId
-            self.game.broadcast(Command(ServerCommands.PlayerSetRegister, { clientId: self.id, programCardId: cardId }))
+            self.game.broadcast(Command(ServerCommands.PlayerSetRegister, { 'clientId': self.id, 'programCardId': cardId }))
 
         elif message.command == ClientCommands.ClearRegister:
             if self.robot.registersCommitted:
@@ -63,7 +66,7 @@ class Client(LineReceiver):
 
             registerId = message.value['register']
             self.robot.registers[registerId] = None
-            self.game.broadcast(Command(ServerCommands.PlayerClearRegister, { clientId: self.id, register: registerId }))
+            self.game.broadcast(Command(ServerCommands.PlayerClearRegister, { 'clientId': self.id, 'register': registerId }))
 
         elif message.command == ClientCommands.ClearRegisters:
             if self.robot.registersCommitted:
@@ -72,7 +75,7 @@ class Client(LineReceiver):
 
             for register in self.robot.registers:
                 register = None
-            self.game.broadcast(Command(ServerCommands.PlayerClearRegisters, { clientId: self.id }))
+            self.game.broadcast(Command(ServerCommands.PlayerClearRegisters, { 'clientId': self.id }))
 
         elif message.command == ClientCommands.CommitRegisters:
             if len(self.robot.registers.keys() != 5):
@@ -80,7 +83,7 @@ class Client(LineReceiver):
                 return
 
             self.robot.commitRegisters()
-            self.game.broadcast(Command(ServerCommands.PlayerCommitRegisters, { clientId: self.id }))
+            self.game.broadcast(Command(ServerCommands.PlayerCommitRegisters, { 'clientId': self.id }))
                 
 
 
