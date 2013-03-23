@@ -51,26 +51,27 @@ function Game:init(host, port, nickname)
     self.client:addPlayer(player)
     self.hud = Hud(player)
 
-    self.robots = {}
+    local robot = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+    player.robot = robot
+
+    self.robots = {[robot] = true}
     self.actor = nil
     self.actionQueue = {}
     
     -- animation test code
-    local robot1 = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
     local robot2 = Robot(3, 2, 0, nil, self.level.level.tileWidth, self.level.level.tileHeight)
 
-    self.robots[robot1] = true
     self.robots[robot2] = true
 
 
 
-    self:enqueueActions(robot1, "graceStartF",
+    self:enqueueActions(robot,  "graceStartF",
                                 "continueF",
                                 "graceStopF",
                                 "turnAround")
     self:enqueueActions(robot2, "graceStartF",
                                 "graceStopF")
-    self:enqueueActions(robot1, "graceStartF",
+    self:enqueueActions(robot,  "graceStartF",
                                 "graceStopF")
 end
 

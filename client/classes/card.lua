@@ -8,8 +8,8 @@ Program = {UTurn = 0,
            Move2 = 5,
            Move3 = 6}
            
-local Card = Class {
-}
+local Card = Class {}
+
 function Card:init(id, priority, program, image)
     self.id = id
     self.priority = priority

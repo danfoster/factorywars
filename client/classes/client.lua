@@ -13,12 +13,12 @@ function Client:addPlayer(player)
 end
 
 function Client:receiveHand(player, cards)
-    player.hand = {}
+    player:clearHand()
 
     for i, id in pairs(cards) do
         local card = self.deck:get(id)
         
-        table.insert(player.hand, card)
+        player:addCard(card)
 
         print(i, card.program, card.priority)
     end

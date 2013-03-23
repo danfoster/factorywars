@@ -50,6 +50,8 @@ function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
         type = "wait",
         time = 0,
     }
+
+    self.registers = {}
 end
 
 function Robot:update(dt)
@@ -88,6 +90,14 @@ end
 function Robot:order(action)
     self.animation.time = 0
     self.animation.type = action
+end
+
+function Robot:setRegister(id, card)
+    local replaced = self.registers[id]
+
+    self.registers[id] = card
+
+    return replaced
 end
 
 return Robot
