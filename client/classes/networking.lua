@@ -68,6 +68,9 @@ function Networking:receive()
     if s == nil then
         return s
     end
+
+    print("Received JSON: ", s)
+
     return json.decode(s)
 end
 
