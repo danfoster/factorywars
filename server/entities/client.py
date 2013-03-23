@@ -56,17 +56,18 @@ class Client(LineReceiver):
                 self.send(Command(ServerCommands.ServerMessage, 'You just tried to use the same card ID \'%s\' in 2 different registers.' % cardId))
                 return
 
-            self.robot.registers[message.value['register']] = cardId
-            self.game.broadcast(Command(ServerCommands.PlayerSetRegister, { 'clientId': self.id, 'programCardId': cardId }))
+            register = message.value['register']
+            self.robot.registers[register] = cardId
+            self.game.broadcast(Command(ServerCommands.PlayerSetRegister, { 'clientId': self.id, 'register': register }))
 
         elif message.command == ClientCommands.ClearRegister:
             if self.robot.registersCommitted:
                 self.send(Command(ServerCommands.ServerMessage, 'You just tried to clear a register, but you have committed your registers'))
                 return
 
-            registerId = message.value['register']
-            self.robot.registers[registerId] = None
-            self.game.broadcast(Command(ServerCommands.PlayerClearRegister, { 'clientId': self.id, 'register': registerId }))
+            register = message.value['register']
+            self.robot.registers[register] = None
+            self.game.broadcast(Command(ServerCommands.PlayerClearRegister, { 'clientId': self.id, 'register': register }))
 
         elif message.command == ClientCommands.ClearRegisters:
             if self.robot.registersCommitted:
