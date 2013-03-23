@@ -46,7 +46,11 @@ class Client(LineReceiver):
         elif message.command == ClientCommands.SetRegister:
             cardId = message.value['programCardId']
             if cardId not in self.hand:
-                self.send(Command(ServerCommands.ServerMessage, 'You just tried to send card ID \'%s\'. This card was not in your hand.' % cardId))
+                self.send(Command(ServerCommands.ServerMessage, 'You just tried to send card ID \'%s\'. This card was never in your hand.' % cardId))
+                return
+
+            if cardId in self.robot.registers.values():
+                self.send(Command(ServerCommands.ServerMessage, 'You just tried to use the same card ID \'%s\' in 2 different registers.' % cardId))
                 return
 
             self.robot.registers[message.value['register']] = cardId
