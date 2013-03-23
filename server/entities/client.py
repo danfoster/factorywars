@@ -36,7 +36,7 @@ class Client(LineReceiver):
 
     def lineReceived(self, line):
         if config.debug:
-            print '<%s>: %s' % (self.nickname, line)
+            print '\'<%s>: %s\'' % (self.nickname, line)
 
         message = utils.evalJSON(line)
 
