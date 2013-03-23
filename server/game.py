@@ -19,6 +19,9 @@ class Game:
 
         self.clients.append(client)
 
+    def broadcast(self, command):
+        for client in self.clients:
+            client.send(command)
     
     #def turn(self):
         # distribute cards

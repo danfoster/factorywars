@@ -10,8 +10,11 @@ ServerCommands = {
     ChatMessage = 1,
     ProgramDeck = 10,
     DealProgramCards = 11,
-    FinalPlayerChoosingOptionCards = 12,
+    FinalPlayerChoosingProgramCards = 12,
     DealOptionCard = 13,
+    PlayerSetRegister = 14,
+    PlayerClearRegister = 15,
+    PlayerClearRegisters = 16,
     DamageRobot = 20
 }
 
