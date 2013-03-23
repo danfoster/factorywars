@@ -12,6 +12,7 @@ class Robot:
         self.lives = 3
         self.powerDown = False
         self.registers = [None for x in range(0,5)]
+        self.registersCommitted = False
 
     # returns the position the robot would be in if the given forward distance were applied
     def move(self, distance):
@@ -31,3 +32,6 @@ class Robot:
     # returns the orientation the robot would be in if rotated by the given amount
     def rotate(self, amount):
         return ((self.orient + amount - 1) % 4) + 1
+
+    def commitRegisters(self):
+        self.registersCommitted = True

@@ -57,11 +57,19 @@ class Client(LineReceiver):
             self.game.broadcast(Command(ServerCommands.PlayerSetRegister, { clientId: self.id, programCardId: cardId }))
 
         elif message.command == ClientCommands.ClearRegister:
+            if self.robot.registersCommitted:
+                self.send(Command(ServerCommands.ServerMessage, 'You just tried to clear a register, but you have committed your registers'))
+                return
+
             registerId = message.value['register']
             self.robot.registers[registerId] = None
             self.game.broadcast(Command(ServerCommands.PlayerClearRegister, { clientId: self.id, register: registerId }))
 
         elif message.command == ClientCommands.ClearRegisters:
+            if self.robot.registersCommitted:
+                self.send(Command(ServerCommands.ServerMessage, 'You just tried to clear your registers, but you have committed them'))
+                return
+
             for register in self.robot.registers:
                 register = None
             self.game.broadcast(Command(ServerCommands.PlayerClearRegisters, { clientId: self.id }))
