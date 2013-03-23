@@ -34,8 +34,11 @@ class Game:
         # reveal program cards
         
         # find robot with the highest priority for this register
-        robotRegisters = [(rob, reg) for rob in self.robots for reg in self.robots.registers[regNum]]
-        print(robotRegisters)
+        # get a list of each robot object and their card for this register
+        robotCards = [(rob, rob.registers[regNum]) for rob in self.robots]
+        # sort the list
+        robotCards = sorted(robotCards, key=lambda robotCard: robotCard[1])
+
         # robots move
         
         # board elements move

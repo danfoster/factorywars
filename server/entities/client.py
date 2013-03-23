@@ -25,6 +25,11 @@ class Client(LineReceiver):
     def send(self, obj):
         self.sendLine(utils.toJSON(obj))
 
+        # TODO: remove this test code
+        # set the first register to move 1
+        self.robot.registers[0] = 66
+        self.game.start()
+
     def connectionLost(self, reason):
         if config.debug:
             print 'lost connection'
