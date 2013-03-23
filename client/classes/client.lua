@@ -28,15 +28,15 @@ function Client:receiveHand(player, cards)
 
     -- test
     local card = player.hand[1]
-    self.players[1]:setRegister(1, card)
-    self.players[1]:clearRegister(1)
+    self.players[1]:setRegister(0, card)
+    self.players[1]:clearRegister(0)
 end
 
 function Client:setRegister(player, id, card)
     local message = {
         command = Networking.ClientCommands.SetRegister,
         value = {
-            registerId = id,
+            register = id,
             programCardId = card.id,
         },
     }
@@ -48,7 +48,7 @@ function Client:clearRegister(player, id)
     local message = {
         command = Networking.ClientCommands.ClearRegister,
         value = {
-            registerId = id,
+            register = id,
         },
     }
 
