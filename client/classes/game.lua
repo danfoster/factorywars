@@ -118,7 +118,7 @@ function Game:update(dt)
     end
 end
 
-function Game:_handleNetworkCommand(command,value)
+function Game:_handleNetworkCommand(command, value)
     if command == ServerCommands.DealProgramCards then
         local player = self.client.players[1]
         local cards = value
@@ -127,9 +127,8 @@ function Game:_handleNetworkCommand(command,value)
     elseif command == ServerCommands.ServerMessage then
         self.client:serverMessage(value)
     else
-        print("WARNING: Received unknown server command: " .. data['command'])
+        print("WARNING: Received unknown server command: " .. tostring(command))
     end
-
 end
 
 function Game:quit()
