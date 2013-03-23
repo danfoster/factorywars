@@ -15,6 +15,7 @@ ServerCommands = {
     PlayerSetRegister = 14,
     PlayerClearRegister = 15,
     PlayerClearRegisters = 16,
+    PlayerCommitRegisters = 17,
     DamageRobot = 20
 }
 
@@ -23,6 +24,7 @@ ClientCommands = {
     SetRegister = 10,
     ClearRegister = 11,
     ClearRegisters = 12,
+    CommitRegisters = 13,
     PlayOptionCard = 20,
     PowerDownNextTurn = 30
 }
