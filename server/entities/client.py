@@ -49,7 +49,7 @@ class Client(LineReceiver):
                 self.send(Command(ServerCommands.ServerMessage, 'You just tried to send card ID \'%s\'. This card was never in your hand.' % cardId))
                 return
 
-            if cardId in self.robot.registers.values():
+            if cardId in self.robot.registers:
                 self.send(Command(ServerCommands.ServerMessage, 'You just tried to use the same card ID \'%s\' in 2 different registers.' % cardId))
                 return
 
