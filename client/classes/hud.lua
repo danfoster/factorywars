@@ -1,10 +1,9 @@
 local Class = require("hump.class")
 
-local Hud = Class {
-}
+local Hud = Class {}
 
-function Hud:init(client)
-    self.client = client
+function Hud:init(player)
+    self.player = player
     self.cardWidth=64
     self.cardHeight=64
     self.fontCard = love.graphics.newFont("data/fonts/Cocksure.ttf", 40)
@@ -17,7 +16,7 @@ end
 
 function Hud:_drawHand()
     i=0
-    for k,v in pairs(self.client.hand) do
+    for k,v in pairs(self.player.hand) do
         self:_drawCard(10+(self.cardWidth+10)*i,love.graphics.getHeight()-self.cardHeight-10,v)
         i = i +1
     end

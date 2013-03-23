@@ -7,6 +7,7 @@ local Networking = require("classes.networking")
 local Level = require("classes.level")
 local Client = require("classes.client")
 local Hud = require("classes.hud")
+local Player = require("classes.player")
 
 local Game = Class {
 }
@@ -17,7 +18,6 @@ function Game:init(host, port, nickname)
     self.updatingView = false
     self.oldMouseX = 0
     self.oldMouseY = 0 
-    
     
     -- test code
     local port = port or 1234
@@ -42,9 +42,14 @@ function Game:init(host, port, nickname)
     end
     self.networking:send({ command= ClientCommands.MyNameIs , value= nickname })
     self.networking:setTimeout(0.001)
+    
     self.client = Client(self.deck)
 
-    self.hud = Hud(self.client)
+    local names = {"TP2k", "WildFire", "2kah", "Ragzouken", "IRConan", "Jith"}
+    local player = Player(names[math.random(1, 6)])
+
+    self.client:addPlayer(player)
+    self.hud = Hud(player)
 
     self.robots = {}
     self.actor = nil
@@ -56,6 +61,8 @@ function Game:init(host, port, nickname)
 
     self.robots[robot1] = true
     self.robots[robot2] = true
+
+
 
     self:enqueueActions(robot1, "graceStartF",
                                 "continueF",
@@ -112,7 +119,10 @@ end
 
 function Game:_handleNetworkCommand(command,value)
     if command == ServerCommands.DealProgramCards then
-        self.client:receiveHand(value)
+        local player = self.client.players[1]
+        local cards = value
+        
+        self.client:receiveHand(player, cards)
     elseif command == ServerCommands.ServerMessage then
         self.client:serverMessage(value)
     else

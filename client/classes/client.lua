@@ -1,19 +1,26 @@
 local Class = require("hump.class")
 
-local Client = Class {
-}
+local Client = Class {}
 
 function Client:init(deck)
-    self.hand = {}
     self.deck = deck
+
+    self.players = {}
 end
 
-function Client:receiveHand(cards)
-    self.hand = {}
-    for k,v in pairs(cards) do
-        local card = self.deck:get(v)
-        table.insert(self.hand,card)
-        print(k,card.program,card.priority)
+function Client:addPlayer(player)
+    table.insert(self.players, player)
+end
+
+function Client:receiveHand(player, cards)
+    player.hand = {}
+
+    for i, id in pairs(cards) do
+        local card = self.deck:get(id)
+        
+        table.insert(player.hand, card)
+
+        print(i, card.program, card.priority)
     end
 end
 
