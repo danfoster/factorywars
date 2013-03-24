@@ -30,7 +30,7 @@ function Client:receiveHand(player, cards)
     -- test
     local card = player.hand[1]
     self.players[1]:setRegister(1, card)
-    self.players[1]:clearRegister(1)
+    --self.players[1]:clearRegister(1)
 end
 
 function Client:setRegister(player, id, card)

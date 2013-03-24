@@ -18,7 +18,9 @@ function PlayState:update(dt)
 end
 
 function PlayState:mousepressed(x,y,button)
-    self.game.hud:mousePressed(x,y,button)
+    if button == 'l' then
+        self.game.hud:mousePressed(x,y)
+    end
     if button == 'r' then
         self.game.updatingView = true
         self.game.oldMouseX = x
@@ -31,6 +33,9 @@ function PlayState:mousepressed(x,y,button)
 end
 
 function PlayState:mousereleased(x,y,button)
+    if button == 'l' then
+        self.game.hud:mouseReleased(x,y)
+    end
     if button == 'r' then
         self.game.updatingView = false
     end

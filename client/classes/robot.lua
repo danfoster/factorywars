@@ -51,7 +51,7 @@ function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
         time = 0,
     }
 
-    self.registers = {}
+    self.registers = {false,false,false,false,false}
 end
 
 function Robot:update(dt)
@@ -96,6 +96,9 @@ function Robot:setRegister(id, card)
     local replaced = self.registers[id]
 
     self.registers[id] = card
+    for k,v in ipairs(self.registers) do
+        print("***",k,v)
+    end
 
     return replaced
 end

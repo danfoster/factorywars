@@ -7,7 +7,6 @@ function Player:init(client, name)
     self.name = name
 
     self.hand = {}
-    self.registers = {false,false,false,false,false}
     self.robot = nil
 end
 
@@ -23,8 +22,7 @@ end
 function Player:removeCard(card)
     for i=1,9 do
         if self.hand[i] == card then 
-            print("***",i)
-            self.hand[i] = false
+            table.remove(self.hand,i)
             break
         end
     end
@@ -36,7 +34,7 @@ function Player:setRegister(id, card)
     local replaced = self.robot:setRegister(id, card)
 
     if replaced then
-        Player:addCard(replaced)
+        self:addCard(replaced)
     end
 
     self.client:setRegister(player, id, card)

@@ -10,11 +10,21 @@ function Hud:init(player)
     self.fontCard = love.graphics.newFont("data/fonts/Cocksure.ttf", 40)
     self.fontCardSmall = love.graphics.newFont("data/fonts/Cocksure.ttf", 20)
     self.registerBorderImage = love.graphics.newImage("data/hud/card_border.png")
+    self.heldCardX = 0
+    self.heldCardY = 0
+    self.heldCard = nil
 end
 
 function Hud:draw()
     self:_drawHand()
     self:_drawRegisters()
+    self:_drawHeld()
+end
+
+function Hud:_drawHeld()
+    if self.heldCard then
+        self:_drawCard(love.mouse.getX()-self.heldCardX,love.mouse.getY()-self.heldCardY,self.heldCard)
+    end
 end
 
 function Hud:_drawHand()
@@ -29,7 +39,7 @@ end
 
 function Hud:_drawRegisters()
     i=0
-    for k,v in ipairs(self.player.registers) do
+    for k,v in ipairs(self.player.robot.registers) do
         self:_drawRegister(5+(self.cardWidth+5+(self.registerBorderWidth*2))*i,love.graphics.getHeight()-self.cardHeight-5-(self.registerBorderWidth*2),v)
         i = i +1
     end
@@ -40,6 +50,9 @@ function Hud:_drawRegister(x,y,card)
     love.graphics.rectangle("fill",x+self.registerBorderWidth,y+self.registerBorderWidth,self.cardWidth,self.cardHeight)
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(self.registerBorderImage,x,y)
+    if card then
+        self:_drawCard(x+self.registerBorderWidth,y+self.registerBorderWidth,card)
+    end
 end
 
 function Hud:_drawCard(x,y,card)
@@ -54,15 +67,29 @@ function Hud:_drawCard(x,y,card)
     love.graphics.printf(card.priority, x, y+(self.cardHeight*0.6), self.cardWidth,'center')
 end
 
-function Hud:mousePressed(x,y,button)
+function Hud:mousePressed(x,y)
     if y >= love.graphics.getHeight()-self.cardHeight-10-self.cardHeight-(self.registerBorderWidth*2) and y <= love.graphics.getHeight()-self.cardHeight-10-self.registerBorderWidth then
-        p = (x%(self.cardWidth+5)) - 5
-        if p > 0 and p < self.cardWidth then
+        px = (x%(self.cardWidth+5)) - 5
+        if px > 0 and px < self.cardWidth then
             card = math.floor(x/(self.cardWidth+5)) + 1
-            if card <= #self.player.hand then
-                print(card)
+            if self.player.hand[card] then
+                if self.heldCard then
+                    self.player:addCard(self.heldCard)
+                end
+                self.heldCard = self.player.hand[card]
+                self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-10-self.cardHeight-(self.registerBorderWidth*2) )
+                self.heldCardX = px
+                self.player:removeCard(self.heldCard)
+                -- self.player:setRegister(0,self.player.hand[card])
             end
         end
+    end
+end
+
+function Hud:mouseReleased(x,y)
+    if self.heldCard then
+        self.player:addCard(self.heldCard)
+        self.heldCard = nil
     end
 end
 
