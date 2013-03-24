@@ -8,6 +8,8 @@ class Deck:
         self.deck = []
         self.dealt = []
 
+        self.fullDeck = {}
+
         self.newRound()
 
     def buildDeck(self):
@@ -25,7 +27,9 @@ class Deck:
             else:
                 program = Program.Move3
 
-            self.deck.append(Card(i * 10, program))
+            card = Card(i * 10, program)
+            self.deck.append(card)
+            self.fullDeck.update({i * 10 : card})
 
     def dealCard(self):
         if len(self.deck) < 1:
@@ -42,3 +46,6 @@ class Deck:
         self.deck = []
         self.dealt = []
         self.buildDeck()
+
+    def getCard(self, cardId):
+        return self.fullDeck[cardId]
