@@ -44,6 +44,7 @@ function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
     self.damage = 0
     self.lives = 3
     self.powerDown = false
+    self.numRegisters = 5
 
     -- see animation notes.txt in assets
     self.animation = {
@@ -51,7 +52,7 @@ function Robot:init(x, y, orientation, image, tileWidth, tileHeight)
         time = 0,
     }
 
-    self.registers = {false,false,false,false,false}
+    self.registers = {}
 end
 
 function Robot:update(dt)
@@ -96,11 +97,22 @@ function Robot:setRegister(id, card)
     local replaced = self.registers[id]
 
     self.registers[id] = card
-    for k,v in ipairs(self.registers) do
-        print("***",k,v)
+    for k=1,self.numRegisters do
+        print("***",k,self.registers[k])
     end
 
     return replaced
+end
+
+function Robot:removeRegisterCard(card)
+    print("!!!",self.numRegisters)
+    for i=1,self.numRegisters do
+        if self.registers[i] == card then 
+            print ("FOUND YOU!: ", i)
+            self.registers[i]=nil
+            break
+        end
+    end
 end
 
 return Robot

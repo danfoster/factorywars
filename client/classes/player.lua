@@ -30,6 +30,7 @@ end
 
 function Player:setRegister(id, card)
     self:removeCard(card)
+    self.robot:removeRegisterCard(card)
 
     local replaced = self.robot:setRegister(id, card)
 
