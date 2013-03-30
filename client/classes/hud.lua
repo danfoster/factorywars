@@ -96,6 +96,7 @@ end
 
 function Hud:mouseReleased(x,y)
     if self.heldCard then
+        -- Is the mouse position in the vertical position for the registers?
         if y >= love.graphics.getHeight()-self.cardHeight-5-(self.registerBorderWidth*2) and y <= love.graphics.getHeight()-5-self.registerBorderWidth then
             px = (x%(self.cardWidth+5+(self.registerBorderWidth*2))) - 5
             if px > 0 and px < self.cardWidth+(self.registerBorderWidth*2) then
@@ -104,6 +105,8 @@ function Hud:mouseReleased(x,y)
                     self.player:setRegister(card,self.heldCard)
                 end
             end
+        else
+            self.player:removeRegisterCard(self.heldCard)
         end
         self.heldCard = nil
     end

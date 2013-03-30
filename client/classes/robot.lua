@@ -95,24 +95,8 @@ end
 
 function Robot:setRegister(id, card)
     local replaced = self.registers[id]
-
     self.registers[id] = card
-    for k=1,self.numRegisters do
-        print("***",k,self.registers[k])
-    end
-
     return replaced
-end
-
-function Robot:removeRegisterCard(card)
-    print("!!!",self.numRegisters)
-    for i=1,self.numRegisters do
-        if self.registers[i] == card then 
-            print ("FOUND YOU!: ", i)
-            self.registers[i]=nil
-            break
-        end
-    end
 end
 
 return Robot

@@ -29,8 +29,8 @@ function Player:removeCard(card)
 end
 
 function Player:setRegister(id, card)
+    self:removeRegisterCard(card)
     self:removeCard(card)
-    self.robot:removeRegisterCard(card)
 
     local replaced = self.robot:setRegister(id, card)
 
@@ -54,6 +54,17 @@ function Player:clearRegister(id)
 
     return cleared
 end
+
+function Player:removeRegisterCard(card)
+    for i=1,self.robot.numRegisters do
+        if self.robot.registers[i] == card then 
+            self:clearRegister(i)
+            break
+        end
+    end
+end
+
+
 
 function Player:clearHand()
     self.hand = {}

@@ -21,10 +21,7 @@ function Client:receiveHand(player, cards)
 
     for i, id in pairs(cards) do
         local card = self.deck:get(id)
-        
         player:addCard(card)
-
-        print(i, card.program, card.priority)
     end
 
 end
