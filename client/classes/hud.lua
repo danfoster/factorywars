@@ -12,6 +12,10 @@ function Hud:init(player)
     self.hudBLImage = love.graphics.newImage("data/hud/hud_bl.png")
     self.cardImage = love.graphics.newImage("data/hud/card.png")
     self.forwardImage = love.graphics.newImage("data/hud/arrow_forward.png")
+    self.backImage = love.graphics.newImage("data/hud/arrow_back.png")
+    self.leftImage = love.graphics.newImage("data/hud/arrow_left.png")
+    self.rightImage = love.graphics.newImage("data/hud/arrow_right.png")
+    self.uTurnImage = love.graphics.newImage("data/hud/arrow_uturn.png")
     self.heldCardX = 0
     self.heldCardY = 0
     self.heldCard = nil
@@ -73,22 +77,24 @@ function Hud:_drawCard(x,y,card,locked)
     love.graphics.setColor(0,0,0,255)
     love.graphics.setFont(self.fontCardSmall)
     love.graphics.printf(card.priority, x, y+7, self.cardWidth,'center')
-    if card.program == Program['Move1'] then
-        love.graphics.setColor(val,val,val,255)
+    love.graphics.setColor(val,val,val,255)
+    if card.program == Program['UTurn'] then
+        love.graphics.draw(self.uTurnImage,x+2,y+22) 
+    elseif card.program == Program['RotateRight'] then
+        love.graphics.draw(self.rightImage,x+10,y+22) 
+    elseif card.program == Program['RotateLeft'] then
+        love.graphics.draw(self.leftImage,x+10,y+22) 
+    elseif card.program == Program['BackUp'] then
+        love.graphics.draw(self.backImage,x+14,y+22) 
+    elseif card.program == Program['Move1'] then
         love.graphics.draw(self.forwardImage,x+14,y+22) 
         love.graphics.printf("1", x, y+43, self.cardWidth,'center')
     elseif card.program == Program['Move2'] then
-        love.graphics.setColor(val,val,val,255)
         love.graphics.draw(self.forwardImage,x+14,y+22) 
         love.graphics.printf("2", x, y+43, self.cardWidth,'center')
     elseif card.program == Program['Move3'] then
-        love.graphics.setColor(val,val,val,255)
         love.graphics.draw(self.forwardImage,x+14,y+22) 
         love.graphics.printf("3", x, y+43, self.cardWidth,'center')
-    else
-        love.graphics.setFont(self.fontCard)
-        love.graphics.setColor(0,0,0,255)
-        love.graphics.printf(card.program, x, y+28, self.cardWidth,'center')
     end
 end
 
@@ -108,8 +114,8 @@ function Hud:mousePressed(x,y)
     -- Is the mouse position in the vertical position for the registers?
     elseif y >= love.graphics.getHeight()-self.cardHeight-22 and y <= love.graphics.getHeight()-22 then
         px = (x%(self.cardWidth+20)) - 14
-        if px > 0 and px < self.cardWidth+(self.registerBorderWidth*2) then
-            card = math.floor(x/(self.cardWidth+5+(self.registerBorderWidth*2))) + 1
+        if px > 0 and px < self.cardWidth then
+            card = math.floor((x-14)/(self.cardWidth+20)) + 1
             if self.player.robot.registers[card] then
                 self.heldCard = self.player.robot.registers[card]
                 self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-22 )
