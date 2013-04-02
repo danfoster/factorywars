@@ -14,10 +14,12 @@ function Button:init(image, imagePressed, font, x, y, textoffset, text)
     self.text = text
     self.font = font
 
+    self.color = {255,255,255,255}
     self.pressed = false
 end
 
 function Button:draw()
+    love.graphics.setColor(self.color)
     if self.pressed then
         love.graphics.draw(self.imagePressed,self.x,self.y)
         os=2
@@ -25,7 +27,7 @@ function Button:draw()
         love.graphics.draw(self.image,self.x,self.y)
         os=0
     end
-    love.graphics.setColor(255,255,255,255)
+--    love.graphics.setColor(255,255,255,255)
     love.graphics.setFont(self.font)
     love.graphics.printf(self.text, self.x+os, self.y+self.textoffset+os, 63,'center')
 
@@ -47,6 +49,10 @@ function Button:checkRelease(x,y)
         end
     end
     return false
+end
+
+function Button:setColor(r,g,b,a)
+    self.color = {r,g,b,a}
 end
 
 return Button

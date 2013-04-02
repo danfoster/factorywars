@@ -21,10 +21,12 @@ function Hud:init(player)
 
     self.commitButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-86,10,"Commit")
     self.powerDownButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-52,6,"Power Down")
+    self.commitButton:setColor(100,100,100,255)
 
     self.heldCardX = 0
     self.heldCardY = 0
     self.heldCard = nil
+    self.canCommit = false
 end
 
 function Hud:draw()
@@ -65,6 +67,16 @@ function Hud:_drawRegisters()
         end
         i = i +1
     end
+end
+
+function Hud:_countRegisters()
+    c = 0
+    for i =1,self.player.robot.numRegisters do
+        if self.player.robot.registers[i] ~= nil then
+            c = c +1
+        end
+    end
+    return c
 end
 
 function Hud:_drawRegister(x,y,card)
@@ -138,7 +150,9 @@ function Hud:mousePressed(x,y)
         end
 
         if not self.heldCard then
-            self.commitButton:checkClick(x,y)
+            if self.canCommit then
+                self.commitButton:checkClick(x,y)
+            end
             self.powerDownButton:checkClick(x,y)
         end
     end
@@ -158,9 +172,19 @@ function Hud:mouseReleased(x,y)
         else
             self.player:removeRegisterCard(self.heldCard)
         end
+        if self:_countRegisters() == 5 and not self.canCommit then
+            self.canCommit = true
+            self.commitButton:setColor(255,255,255,255)
+        elseif self:_countRegisters() < 5 and self.canCommit then
+            self.canCommit = false
+            self.commitButton:setColor(100,100,100,255)
+        end
+
         self.heldCard = nil
     else
-        self.commitButton:checkRelease(x,y)
+        if self.canCommit then
+            self.commitButton:checkRelease(x,y)
+        end
         self.powerDownButton:checkRelease(x,y)
     end
 end
