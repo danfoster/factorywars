@@ -1,4 +1,5 @@
 local Class = require("hump.class")
+local Button = require("classes.button")
 
 local Hud = Class {}
 
@@ -9,6 +10,7 @@ function Hud:init(player)
     self.registerBorderWidth=5
     self.fontCard = love.graphics.newFont("data/fonts/pixelart.ttf", 40)
     self.fontCardSmall = love.graphics.newFont("data/fonts/pixelart.ttf", 16)
+    self.fontButton = love.graphics.newFont("data/fonts/pixelart.ttf", 11)
     self.hudBLImage = love.graphics.newImage("data/hud/hud_bl.png")
     self.cardImage = love.graphics.newImage("data/hud/card.png")
     self.forwardImage = love.graphics.newImage("data/hud/arrow_forward.png")
@@ -16,16 +18,26 @@ function Hud:init(player)
     self.leftImage = love.graphics.newImage("data/hud/arrow_left.png")
     self.rightImage = love.graphics.newImage("data/hud/arrow_right.png")
     self.uTurnImage = love.graphics.newImage("data/hud/arrow_uturn.png")
+
+    self.commitButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-86,10,"Commit")
+    self.powerDownButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-52,6,"Power Down")
+
     self.heldCardX = 0
     self.heldCardY = 0
     self.heldCard = nil
 end
 
 function Hud:draw()
-    love.graphics.draw(self.hudBLImage,0,love.graphics.getHeight()-112)
+    self:_drawHUD()
     self:_drawHand()
     self:_drawRegisters()
     self:_drawHeld()
+end
+
+function Hud:_drawHUD()
+    love.graphics.draw(self.hudBLImage,0,love.graphics.getHeight()-112)
+    self.commitButton:draw()
+    self.powerDownButton:draw()
 end
 
 function Hud:_drawHeld()
@@ -124,6 +136,11 @@ function Hud:mousePressed(x,y)
                 self.heldCardX = px
             end
         end
+
+        if not self.heldCard then
+            self.commitButton:checkClick(x,y)
+            self.powerDownButton:checkClick(x,y)
+        end
     end
 end
 
@@ -142,6 +159,9 @@ function Hud:mouseReleased(x,y)
             self.player:removeRegisterCard(self.heldCard)
         end
         self.heldCard = nil
+    else
+        self.commitButton:checkRelease(x,y)
+        self.powerDownButton:checkRelease(x,y)
     end
 end
 
