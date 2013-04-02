@@ -48,7 +48,9 @@ end
 function Hud:_drawRegisters()
     for i=0,self.player.robot.numRegisters-1 do
         v = self.player.robot.registers[i+1]
-        self:_drawRegister(14+(self.cardWidth+20)*i,love.graphics.getHeight()-self.cardHeight-22,v)
+        if v and v ~= self.heldCard then
+            self:_drawRegister(14+(self.cardWidth+20)*i,love.graphics.getHeight()-self.cardHeight-22,v)
+        end
         i = i +1
     end
 end
