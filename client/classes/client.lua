@@ -8,12 +8,11 @@ function Client:init(networking, deck)
     self.networking = networking
     self.hand = {}
     self.deck = deck
-
-    self.players = {}
+    self.player = nil
 end
 
 function Client:addPlayer(player)
-    table.insert(self.players, player)
+    self.player = player
 end
 
 function Client:receiveHand(player, cards)
@@ -26,7 +25,7 @@ function Client:receiveHand(player, cards)
 
 end
 
-function Client:setRegister(player, id, card)
+function Client:setRegister(id, card)
     local message = {
         command = Networking.ClientCommands.SetRegister,
         value = {
@@ -38,7 +37,7 @@ function Client:setRegister(player, id, card)
     self.networking:send(message)
 end
 
-function Client:clearRegister(player, id)
+function Client:clearRegister(id)
     local message = {
         command = Networking.ClientCommands.ClearRegister,
         value = {

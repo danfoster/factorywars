@@ -48,7 +48,7 @@ function Player:setRegister(id, card)
         self:addCard(replaced)
     end
 
-    self.client:setRegister(player, id, card)
+    self.client:setRegister(id, card)
 
     return replaced
 end
@@ -60,7 +60,7 @@ function Player:clearRegister(id)
         self:addCard(cleared)
     end
 
-    self.client:clearRegister(player, id)
+    self.client:clearRegister(id)
 
     return cleared
 end

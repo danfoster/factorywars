@@ -8,6 +8,7 @@ local Level = require("classes.level")
 local Client = require("classes.client")
 local Hud = require("classes.hud")
 local Player = require("classes.player")
+local RemotePlayer = require("classes.remotePlayer")
 
 local Game = Class {
 }
@@ -17,7 +18,8 @@ function Game:init(host, port, nickname)
     self.level = Level()
     self.updatingView = false
     self.oldMouseX = 0
-    self.oldMouseY = 0 
+    self.oldMouseY = 0
+    self.remotePlayers = {}
     
     -- test code
     local port = port or 1234
@@ -34,6 +36,7 @@ function Game:init(host, port, nickname)
     self.client = Client(self.networking, self.deck)
     local names = {"TP2k", "WildFire", "2kah", "Ragzouken", "IRConan", "Jith"}
     local player = Player(self.client, nickname or names[math.random(1, 6)])
+    self.client:addPlayer(player)
     
     local data = self.networking:receive() 
     if data then
@@ -48,31 +51,29 @@ function Game:init(host, port, nickname)
     self.networking:send({ command= ClientCommands.MyNameIs , value= nickname })
     self.networking:setTimeout(0.001)
 
-    self.client:addPlayer(player)
     self.hud = Hud(player)
 
-    local robot = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
-    player.robot = robot
+    self.robot = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+    player.robot = self.robot
 
-    self.robots = {[robot] = true}
     self.actor = nil
     self.actionQueue = {}
     
     -- animation test code
-    local robot2 = Robot(3, 2, 0, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+    -- local robot2 = Robot(3, 2, 0, nil, self.level.level.tileWidth, self.level.level.tileHeight)
 
-    self.robots[robot2] = true
+    -- self.robots[robot2] = true
 
 
 
-    self:enqueueActions(robot,  "graceStartF",
-                                "continueF",
-                                "graceStopF",
-                                "turnAround")
-    self:enqueueActions(robot2, "graceStartF",
-                                "graceStopF")
-    self:enqueueActions(robot,  "graceStartF",
-                                "graceStopF")
+    -- self:enqueueActions(robot,  "graceStartF",
+                                -- "continueF",
+                                -- "graceStopF",
+                                -- "turnAround")
+    -- self:enqueueActions(robot2, "graceStartF",
+                                -- "graceStopF")
+    -- self:enqueueActions(robot,  "graceStartF",
+                                -- "graceStopF")
 end
 
 function Game:draw()
@@ -85,8 +86,9 @@ function Game:draw()
 
     self.level:draw()
     
-    for robot in pairs(self.robots) do
-        robot:draw()
+    self.robot:draw()
+    for _id, player in pairs(self.remotePlayers) do
+        player.robot:draw()
     end
     
     self.cam:detach()
@@ -97,8 +99,9 @@ end
 function Game:update(dt)
     if dt > 0.1 then dt = 0.1 end
 
-    for robot in pairs(self.robots) do
-        robot:update(dt)
+    self.robot:update(dt)
+    for _id, player in pairs(self.remotePlayers) do
+        player.robot:update(dt)
     end
 
     self:executeActions()
@@ -120,32 +123,40 @@ function Game:update(dt)
     self.hud:update()
 end
 
+function Game:addRemotePlayer(clientId)
+    local robot = Robot(1, 1, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+    local remotePlayer = RemotePlayer(clientId, robot)
+    self.remotePlayers[clientId] = remotePlayer
+end
+
 function Game:_handleNetworkCommand(command, value)
     if command == ServerCommands.DealProgramCards then
-        local player = self.client.players[1]
+        local player = self.client.player
         local cards = value
         
         self.client:receiveHand(player, cards)
     elseif command == ServerCommands.ServerMessage then
         self.client:serverMessage(value)
+    elseif command == ServerCommands.ClientJoined then
+        self:addRemotePlayer(value.clientId)
     elseif command == ServerCommands.RobotTurnRight then
-        self:enqueueActions(value.clientId, "turnRight")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "turnRight")
     elseif command == ServerCommands.RobotTurnLeft then
-        self:enqueueActions(value.clientId, "turnLeft")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "turnLeft")
     elseif command == ServerCommands.RobotTurnAround then
-        self:enqueueActions(value.clientId, "turnAround")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "turnAround")
     elseif command == ServerCommands.RobotGracefulStartForward then
-        self:enqueueActions(value.clientId, "graceStartF")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStartF")
     elseif command == ServerCommands.RobotGracefulStartBackward then
-        self:enqueueActions(value.clientId, "graceStartB")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStartB")
     elseif command == ServerCommands.RobotGracefulStopForward then
-        self:enqueueActions(value.clientId, "graceStopF")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStopF")
     elseif command == ServerCommands.RobotGracefulStopBackward then
-        self:enqueueActions(value.clientId, "graceStopB")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStopB")
     elseif command == ServerCommands.RobotContinueForward then
-        self:enqueueActions(value.clientId, "continueF")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "continueF")
     elseif command == ServerCommands.RobotContinueBackward then
-        self:enqueueActions(value.clientId, "continueB")
+        self:enqueueActions(self.remotePlayers[value.clientId].robot, "continueB")
     else
         print("WARNING: Received unknown server command: " .. tostring(command))
     end
