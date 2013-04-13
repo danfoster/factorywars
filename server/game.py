@@ -1,6 +1,7 @@
 from entities.robot import Robot, Direction
 from entities.deck import Deck
 from entities.card import Program
+from network import ServerCommands, Command
 
 class Game:
 
@@ -35,26 +36,38 @@ class Game:
         # reveal program cards
         
         # find robot with the highest priority for this register
-        # get a list of each robot object and their card for this register
-        robotCards = [(rob, rob.registers[regNum]) for rob in self.robots]
+        # get a list of each client object and their robot's card for this register
+        robotCards = [(cli, cli.robot.registers[regNum]) for cli in self.clients]
         # sort the list
         robotCards = sorted(robotCards, key=lambda robotCard: robotCard[1])
         # robots move
-        for (robot, cardId) in robotCards:
+        for (client, cardId) in robotCards:
             # get card from card ID
             card = self.deck.getCard(cardId)
             if card.program >= 3:
                 # if card requires a tile change then check if this is possible
+                robot = client.robot
                 newX = robot.x
                 newY = robot.y
                 if card.program == Program.BackUp:
                     newX, newY = robot.move(-1)
+                    self.broadcast(Command(RobotGracefulStartBackward, ))
+                    self.broadcast(Command(RobotGracefulStopBackward, client.id))
                 elif card.program == Program.Move1:
                     newX, newY = robot.move(1)
+                    self.broadcast(Command(RobotGracefulStartForward, client.id))
+                    self.broadcast(Command(RobotGracefulStopForward, client.id))
                 elif card.program == Program.Move2:
                     newX, newY = robot.move(2)
+                    self.broadcast(Command(RobotGracefulStartForward, client.id))
+                    self.broadcast(Command(RobotContinueForward, client.id))
+                    self.broadcast(Command(RobotGracefulStopForward, client.id))
                 elif card.program == Program.Move3:
                     newX, newY = robot.move(3)
+                    self.broadcast(Command(RobotGracefulStartForward, client.id))
+                    self.broadcast(Command(RobotContinueForward, client.id))
+                    self.broadcast(Command(RobotContinueForward, client.id))
+                    self.broadcast(Command(RobotGracefulStopForward, client.id))
                 # TODO: check that moving is legal, and find final position
                 # check for any robot collisions (pushing)
                 robot.x = newX
@@ -64,10 +77,13 @@ class Game:
                 newO = robot.orient
                 if card.program == Program.UTurn:
                     newO = robot.rotate(2)
+                    self.broadcast(Command(RobotTurnAround, robot.Id))
                 elif card.program == Program.RotateRight:
                     newO = robot.rotate(1)
+                    self.broadcast(Command(RobotTurnRight, robot.Id))
                 elif card.program == Program.RotateLeft:
                     newO = robot.rotate(-1)
+                    self.broadcast(Command(RobotTurnLeft, robot.Id))
                 robot.orient = newO
             # TODO: send changes to clients
         # board elements move
