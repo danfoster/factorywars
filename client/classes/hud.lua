@@ -23,7 +23,6 @@ function Hud:init(player)
 
     self.commitButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-86,10,"Commit")
     self.powerDownButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-52,6,"Power Down")
-    self.commitButton:setColor(100,100,100,255)
 
     self.leds = {}
     for i=1,5 do
@@ -42,6 +41,23 @@ function Hud:draw()
     self:_drawRegisters()
     self:_drawHeld()
 end
+
+function Hud:update()
+    if self.player.state == Player.PlayerStates.pickingCards then
+        if self:_countRegisters() == 5  then
+            self.canCommit = true
+            self.commitButton:setColor(255,255,255,255)
+        elseif self:_countRegisters() < 5  then
+            self.canCommit = false
+            self.commitButton:setColor(100,100,100,255)
+        end
+        self.powerDownButton:setColor(255,255,255,255)
+    else
+            self.commitButton:setColor(100,255,100,255)
+            self.powerDownButton:setColor(100,100,100,255)
+    end
+end
+
 
 function Hud:_drawHUD()
     love.graphics.draw(self.hudBLImage,0,love.graphics.getHeight()-112)
@@ -160,10 +176,12 @@ function Hud:mousePressed(x,y)
             end
 
             if not self.heldCard then
-                if self.canCommit then
-                    self.commitButton:checkClick(x,y)
+                if self.player.state == Player.PlayerStates.pickingCards then
+                    if self.canCommit then
+                        self.commitButton:checkClick(x,y)
+                    end
+                    self.powerDownButton:checkClick(x,y)
                 end
-                self.powerDownButton:checkClick(x,y)
             end
         end
     end
@@ -188,13 +206,6 @@ function Hud:mouseReleased(x,y)
                 if pos then
                     self.leds[pos]:setColor(25,25,25,255)
                 end
-            end
-            if self:_countRegisters() == 5 and not self.canCommit then
-                self.canCommit = true
-                self.commitButton:setColor(255,255,255,255)
-            elseif self:_countRegisters() < 5 and self.canCommit then
-                self.canCommit = false
-                self.commitButton:setColor(100,100,100,255)
             end
 
             self.heldCard = nil

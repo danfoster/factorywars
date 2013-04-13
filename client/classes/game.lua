@@ -116,6 +116,8 @@ function Game:update(dt)
         self.oldMouseX = love.mouse.getX()
         self.oldMouseY = love.mouse.getY()
     end
+
+    self.hud:update()
 end
 
 function Game:_handleNetworkCommand(command, value)
