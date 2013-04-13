@@ -51,7 +51,14 @@ function Hud:update()
             self.canCommit = false
             self.commitButton:setColor(100,100,100,255)
         end
-        self.powerDownButton:setColor(255,255,255,255)
+        if self.player.poweredDown == 0 then
+            self.powerDownButton:setColor(255,255,255,255)
+        elseif self.player.poweredDown == 1 then
+            self.powerDownButton:setColor(205,199,9,255)
+        elseif self.player.poweredDown == 2 then
+            self.powerDownButton:setColor(25,255,25,255)
+        end
+
         for i=1,5 do
             if self.player.robot.registers[i] then
                 self.leds[i]:setColor(205,199,9,255)
@@ -221,7 +228,9 @@ function Hud:mouseReleased(x,y)
                     self.player:commitRegisters()
                 end
             end
-            self.powerDownButton:checkRelease(x,y)
+            if self.powerDownButton:checkRelease(x,y) then
+                    self.player:powerDownToggle()
+            end
         end
     end
 end

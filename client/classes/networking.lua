@@ -46,7 +46,8 @@ ClientCommands = {
     ClearRegisters = 12,
     CommitRegisters = 13,
     PlayOptionCard = 20,
-    PowerDownNextTurn = 30
+    PowerDownNextTurn = 30,
+    RevertPowerDownNextTurn = 31,
 }
 
 local Networking = Class {

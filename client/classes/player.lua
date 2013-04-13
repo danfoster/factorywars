@@ -18,6 +18,7 @@ function Player:init(client, name, robot)
     self.hand = {}
     self.robot = robot
     self.state = PlayerStates.pickingCards
+    self.poweredDown = 0 -- 0: No 1: Pending power down 2: Powered down this turn
 end
 
 function Player:addCard(card)
@@ -91,6 +92,16 @@ end
 
 function Player:clearHand()
     self.hand = {}
+end
+
+function Player:powerDownToggle()
+    if self.poweredDown == 0 then
+        self.poweredDown = 1
+        self.client:powerDown()
+    elseif self.poweredDown == 1 then
+        self.poweredDown = 0
+        self.client:revertPowerDown()
+    end
 end
 
 return Player

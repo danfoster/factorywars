@@ -59,6 +59,25 @@ function Client:commitRegisters()
     self.networking:send(message)
 end
 
+function Client:powerDown()
+    local message = {
+        command = Networking.ClientCommands.PowerDownNextTurn,
+        value = {
+        },
+    }
+    self.networking:send(message)
+end
+
+function Client:revertPowerDown()
+    local message = {
+        command = Networking.ClientCommands.RevertPowerDownNextTurn,
+        value = {
+        },
+    }
+    self.networking:send(message)
+end
+
+
 function Client:serverMessage(message)
     print('Server: ' .. message)
 end
