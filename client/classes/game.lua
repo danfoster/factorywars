@@ -126,6 +126,24 @@ function Game:_handleNetworkCommand(command, value)
         self.client:receiveHand(player, cards)
     elseif command == ServerCommands.ServerMessage then
         self.client:serverMessage(value)
+    elseif command == ServerCommands.RobotTurnRight then
+        self:enqueueActions(value.clientId, "turnRight")
+    elseif command == ServerCommands.RobotTurnLeft then
+        self:enqueueActions(value.clientId, "turnLeft")
+    elseif command == ServerCommands.RobotTurnAround then
+        self:enqueueActions(value.clientId, "turnAround")
+    elseif command == ServerCommands.RobotGracefulStartForward then
+        self:enqueueActions(value.clientId, "graceStartF")
+    elseif command == ServerCommands.RobotGracefulStartBackward then
+        self:enqueueActions(value.clientId, "graceStartB")
+    elseif command == ServerCommands.RobotGracefulStopForward then
+        self:enqueueActions(value.clientId, "graceStopF")
+    elseif command == ServerCommands.RobotGracefulStopBackward then
+        self:enqueueActions(value.clientId, "graceStopB")
+    elseif command == ServerCommands.RobotContinueForward then
+        self:enqueueActions(value.clientId, "continueF")
+    elseif command == ServerCommands.RobotContinueBackward then
+        self:enqueueActions(value.clientId, "continueB")
     else
         print("WARNING: Received unknown server command: " .. tostring(command))
     end
