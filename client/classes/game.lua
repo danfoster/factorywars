@@ -124,7 +124,7 @@ function Game:update(dt)
 end
 
 function Game:addRemotePlayer(clientId)
-    local robot = Robot(1, 1, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+    local robot = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
     local remotePlayer = RemotePlayer(clientId, robot)
     self.remotePlayers[clientId] = remotePlayer
 end
