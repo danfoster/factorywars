@@ -20,11 +20,22 @@ class Game:
 
     def addClient(self, client):
         robot = Robot(1, 1, Direction.Right)
-
-        self.robots.append(robot)
         client.robot = robot
 
+        client.send(Command(ServerCommands.ProgramDeck, self.deck.getDeck()))
+        client.hand = [self.deck.dealCard().id for x in range(1,10)]
+        client.send(Command(ServerCommands.DealProgramCards, client.hand))
+        client.send(Command(ServerCommands.YourClientIdIs, { 'clientId': client.id }))
+        self.broadcastExcept(client.id, Command(ServerCommands.ClientJoined, { 'clientId': client.id }))
+        for existingClient in self.clients:
+            client.send(Command(ServerCommands.ClientJoined, { 'clientId': existingClient.id }))
+
+        self.robots.append(robot)
         self.clients.append(client)
+
+    def removeClient(self, client):
+        self.robots.remove(client.robot)
+        self.clients.remove(client)
 
     def broadcast(self, command):
         for client in self.clients:
