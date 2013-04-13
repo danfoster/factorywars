@@ -10,8 +10,8 @@ function Hud:init(player)
     self.cardWidth=64
     self.cardHeight=64
     self.registerBorderWidth=5
-    self.fontCard = love.graphics.newFont("data/fonts/pixelart.ttf", 40)
-    self.fontCardSmall = love.graphics.newFont("data/fonts/pixelart.ttf", 16)
+    self.fontCard = love.graphics.newFont("data/fonts/04B_03B_.TTF", 40)
+    self.fontCardSmall = love.graphics.newFont("data/fonts/04B_03B_.TTF", 16)
     self.fontButton = love.graphics.newFont("data/fonts/pixelart.ttf", 11)
     self.hudBLImage = love.graphics.newImage("data/hud/hud_bl.png")
     self.cardImage = love.graphics.newImage("data/hud/card.png")
@@ -128,7 +128,7 @@ function Hud:_drawCard(x,y,card,locked)
     love.graphics.draw(self.cardImage,x,y) 
     love.graphics.setColor(0,0,0,255)
     love.graphics.setFont(self.fontCardSmall)
-    love.graphics.printf(card.priority, x, y+7, self.cardWidth,'center')
+    love.graphics.printf(card.priority, x, y+4, self.cardWidth,'center')
     love.graphics.setColor(val,val,val,255)
     if card.program == Program['UTurn'] then
         love.graphics.draw(self.uTurnImage,x+2,y+22) 
@@ -140,13 +140,13 @@ function Hud:_drawCard(x,y,card,locked)
         love.graphics.draw(self.backImage,x+14,y+22) 
     elseif card.program == Program['Move1'] then
         love.graphics.draw(self.forwardImage,x+14,y+22) 
-        love.graphics.printf("1", x, y+43, self.cardWidth,'center')
+        love.graphics.printf("1", x-1, y+43, self.cardWidth,'center')
     elseif card.program == Program['Move2'] then
         love.graphics.draw(self.forwardImage,x+14,y+22) 
-        love.graphics.printf("2", x, y+43, self.cardWidth,'center')
+        love.graphics.printf("2", x-1, y+43, self.cardWidth,'center')
     elseif card.program == Program['Move3'] then
         love.graphics.draw(self.forwardImage,x+14,y+22) 
-        love.graphics.printf("3", x, y+43, self.cardWidth,'center')
+        love.graphics.printf("3", x-1, y+43, self.cardWidth,'center')
     end
 end
 
