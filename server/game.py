@@ -25,6 +25,11 @@ class Game:
     def broadcast(self, command):
         for client in self.clients:
             client.send(command)
+
+    def broadcastExcept(self, clientId, command):
+        for client in self.clients:
+            if client.id != clientId:
+                client.send(command)
     
     #def turn(self):
         # distribute cards

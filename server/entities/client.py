@@ -21,7 +21,8 @@ class Client(LineReceiver):
         self.send(Command(ServerCommands.ProgramDeck, self.game.deck.getDeck()))
         self.hand = [self.game.deck.dealCard().id for x in range(1,10)]
         self.send(Command(ServerCommands.DealProgramCards, self.hand))
-        self.game.broadcast(Command(ServerCommands.ClientJoined, { 'clientId': self.id }))
+        self.send(Command(ServerCommands.YourClientIdIs, { 'clientId': self.id }))
+        self.game.broadcastExcept(self.id, Command(ServerCommands.ClientJoined, { 'clientId': self.id }))
 
     def send(self, obj):
         json = utils.toJSON(obj)
@@ -32,7 +33,7 @@ class Client(LineReceiver):
     def connectionLost(self, reason):
         if config.debug:
             print 'lost connection'
-        self.game.broadcast(Command(ServerCommands.ClientLeft, { 'clientId': self.id }))
+        self.game.broadcastExcept(self.id, Command(ServerCommands.ClientLeft, { 'clientId': self.id }))
 
     def lineReceived(self, line):
         if config.debug:
