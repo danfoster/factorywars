@@ -129,6 +129,10 @@ function Game:addRemotePlayer(clientId)
     self.remotePlayers[clientId] = remotePlayer
 end
 
+function Game:removeRemotePlayer(clientId)
+    self.remotePlayers[clientId] = nil
+end
+
 function Game:_handleNetworkCommand(command, value)
     if command == ServerCommands.DealProgramCards then
         local player = self.client.player
@@ -139,6 +143,8 @@ function Game:_handleNetworkCommand(command, value)
         self.client:serverMessage(value)
     elseif command == ServerCommands.ClientJoined then
         self:addRemotePlayer(value.clientId)
+    elseif command == ServerCommands.ClientLeft then
+        self:removeRemotePlayer(value.clientId)
     elseif command == ServerCommands.YourClientIdIs then
         self.client.Id = value.clientId
     elseif command == ServerCommands.RobotTurnRight then
