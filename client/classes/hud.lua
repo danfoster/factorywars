@@ -52,9 +52,19 @@ function Hud:update()
             self.commitButton:setColor(100,100,100,255)
         end
         self.powerDownButton:setColor(255,255,255,255)
+        for i=1,5 do
+            if self.player.robot.registers[i] then
+                self.leds[i]:setColor(205,199,9,255)
+            else
+                self.leds[i]:setColor(25,25,25,255)
+            end
+        end
     else
             self.commitButton:setColor(100,255,100,255)
             self.powerDownButton:setColor(100,100,100,255)
+            for k,v in pairs(self.leds) do
+                v:setColor(25,255,25,255)
+            end
     end
 end
 
@@ -197,15 +207,11 @@ function Hud:mouseReleased(x,y)
                     card = math.floor(x/(self.cardWidth+5+(self.registerBorderWidth*2))) + 1
                     if card >0 and card < 6 then
                         self.player:setRegister(card,self.heldCard)
-                        self.leds[card]:setColor(205,199,9,255)
                     end
                 end
             else
                 pos = self.player:getRegisterPosition(self.heldCard)
                 self.player:removeRegisterCard(self.heldCard)
-                if pos then
-                    self.leds[pos]:setColor(25,25,25,255)
-                end
             end
 
             self.heldCard = nil
