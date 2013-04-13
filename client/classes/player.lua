@@ -11,12 +11,12 @@ local Player = Class {
     PlayerStates = PlayerStates
 }
 
-function Player:init(client, name)
+function Player:init(client, name, robot)
     self.client = client
     self.name = name
 
     self.hand = {}
-    self.robot = nil
+    self.robot = robot
     self.state = PlayerStates.pickingCards
 end
 

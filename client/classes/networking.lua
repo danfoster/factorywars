@@ -11,6 +11,7 @@ ServerCommands = {
     ClientJoined = 2,
     ClientLeft = 3,
     ClientChangedNickname = 4,
+    YourClientIdIs = 5,
 
     ProgramDeck = 10,
     DealProgramCards = 11,

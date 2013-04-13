@@ -34,8 +34,11 @@ function Game:init(host, port, nickname)
     self.networking:connect(host, port)
 
     self.client = Client(self.networking, self.deck)
+    
+    self.robot = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
+    
     local names = {"TP2k", "WildFire", "2kah", "Ragzouken", "IRConan", "Jith"}
-    local player = Player(self.client, nickname or names[math.random(1, 6)])
+    local player = Player(self.client, nickname or names[math.random(1, 6)], self.robot)
     self.client:addPlayer(player)
     
     local data = self.networking:receive() 
@@ -52,9 +55,6 @@ function Game:init(host, port, nickname)
     self.networking:setTimeout(0.001)
 
     self.hud = Hud(player)
-
-    self.robot = Robot(2, 2, 1, nil, self.level.level.tileWidth, self.level.level.tileHeight)
-    player.robot = self.robot
 
     self.actor = nil
     self.actionQueue = {}
