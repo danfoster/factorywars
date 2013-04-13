@@ -9,6 +9,7 @@ function Client:init(networking, deck)
     self.hand = {}
     self.deck = deck
     self.player = nil
+    self.Id = nil
 end
 
 function Client:addPlayer(player)

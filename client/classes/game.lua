@@ -139,26 +139,36 @@ function Game:_handleNetworkCommand(command, value)
         self.client:serverMessage(value)
     elseif command == ServerCommands.ClientJoined then
         self:addRemotePlayer(value.clientId)
+    elseif command == ServerCommands.YourClientIdIs then
+        self.client.Id = value.clientId
     elseif command == ServerCommands.RobotTurnRight then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "turnRight")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "turnRight")
     elseif command == ServerCommands.RobotTurnLeft then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "turnLeft")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "turnLeft")
     elseif command == ServerCommands.RobotTurnAround then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "turnAround")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "turnAround")
     elseif command == ServerCommands.RobotGracefulStartForward then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStartF")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "graceStartF")
     elseif command == ServerCommands.RobotGracefulStartBackward then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStartB")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "graceStartB")
     elseif command == ServerCommands.RobotGracefulStopForward then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStopF")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "graceStopF")
     elseif command == ServerCommands.RobotGracefulStopBackward then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "graceStopB")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "graceStopB")
     elseif command == ServerCommands.RobotContinueForward then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "continueF")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "continueF")
     elseif command == ServerCommands.RobotContinueBackward then
-        self:enqueueActions(self.remotePlayers[value.clientId].robot, "continueB")
+        self:enqueueActions(self:getPlayer(value.clientId).robot, "continueB")
     else
         print("WARNING: Received unknown server command: " .. tostring(command))
+    end
+end
+
+function Game:getPlayer(clientId)
+    if clientId == self.client.Id then
+        return self.client.player
+    else
+        return self.remotePlayers[clientId]
     end
 end
 
