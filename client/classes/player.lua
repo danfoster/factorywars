@@ -64,7 +64,14 @@ function Player:removeRegisterCard(card)
     end
 end
 
-
+function Player:getRegisterPosition(card)
+    for i=1,self.robot.numRegisters do
+        if self.robot.registers[i] == card then 
+            return i
+        end
+    end
+    return nil
+end
 
 function Player:clearHand()
     self.hand = {}

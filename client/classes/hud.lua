@@ -1,5 +1,6 @@
 local Class = require("hump.class")
 local Button = require("classes.button")
+local Led = require("classes.led")
 
 local Hud = Class {}
 
@@ -22,6 +23,11 @@ function Hud:init(player)
     self.commitButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-86,10,"Commit")
     self.powerDownButton = Button("data/hud/button.png","data/hud/button_pressed.png",self.fontButton,427,love.graphics.getHeight()-52,6,"Power Down")
     self.commitButton:setColor(100,100,100,255)
+
+    self.leds = {}
+    for i=1,5 do
+        self.leds[i]= Led((i*84)-42,love.graphics.getHeight()-95)
+    end
 
     self.heldCardX = 0
     self.heldCardY = 0
@@ -66,6 +72,9 @@ function Hud:_drawRegisters()
             self:_drawRegister(14+(self.cardWidth+20)*i,love.graphics.getHeight()-self.cardHeight-22,v)
         end
         i = i +1
+    end
+    for k,v in pairs(self.leds) do
+        v:draw()
     end
 end
 
@@ -167,10 +176,15 @@ function Hud:mouseReleased(x,y)
                 card = math.floor(x/(self.cardWidth+5+(self.registerBorderWidth*2))) + 1
                 if card >0 and card < 6 then
                     self.player:setRegister(card,self.heldCard)
+                    self.leds[card]:setColor(205,199,9,255)
                 end
             end
         else
+            pos = self.player:getRegisterPosition(self.heldCard)
             self.player:removeRegisterCard(self.heldCard)
+            if pos then
+                self.leds[pos]:setColor(25,25,25,255)
+            end
         end
         if self:_countRegisters() == 5 and not self.canCommit then
             self.canCommit = true

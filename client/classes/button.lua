@@ -3,7 +3,6 @@ local Class = require("hump.class")
 local Button = Class {}
 
 function Button:init(image, imagePressed, font, x, y, textoffset, text)
-    print(imagePressed)
     self.image = love.graphics.newImage(image)
     self.imagePressed = love.graphics.newImage(imagePressed)
     self.width = self.image:getWidth()
