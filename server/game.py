@@ -51,23 +51,23 @@ class Game:
                 newY = robot.y
                 if card.program == Program.BackUp:
                     newX, newY = robot.move(-1)
-                    self.broadcast(Command(RobotGracefulStartBackward, ))
-                    self.broadcast(Command(RobotGracefulStopBackward, client.id))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStartBackward, { 'clientId': client.id }))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStopBackward, { 'clientId': client.id }))
                 elif card.program == Program.Move1:
                     newX, newY = robot.move(1)
-                    self.broadcast(Command(RobotGracefulStartForward, client.id))
-                    self.broadcast(Command(RobotGracefulStopForward, client.id))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
                 elif card.program == Program.Move2:
                     newX, newY = robot.move(2)
-                    self.broadcast(Command(RobotGracefulStartForward, client.id))
-                    self.broadcast(Command(RobotContinueForward, client.id))
-                    self.broadcast(Command(RobotGracefulStopForward, client.id))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
+                    self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
                 elif card.program == Program.Move3:
                     newX, newY = robot.move(3)
-                    self.broadcast(Command(RobotGracefulStartForward, client.id))
-                    self.broadcast(Command(RobotContinueForward, client.id))
-                    self.broadcast(Command(RobotContinueForward, client.id))
-                    self.broadcast(Command(RobotGracefulStopForward, client.id))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
+                    self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
+                    self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
+                    self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
                 # TODO: check that moving is legal, and find final position
                 # check for any robot collisions (pushing)
                 robot.x = newX
@@ -77,13 +77,13 @@ class Game:
                 newO = robot.orient
                 if card.program == Program.UTurn:
                     newO = robot.rotate(2)
-                    self.broadcast(Command(RobotTurnAround, robot.Id))
+                    self.broadcast(Command(ServerCommands.RobotTurnAround, { 'clientId': client.id }))
                 elif card.program == Program.RotateRight:
                     newO = robot.rotate(1)
-                    self.broadcast(Command(RobotTurnRight, robot.Id))
+                    self.broadcast(Command(ServerCommands.RobotTurnRight, { 'clientId': client.id }))
                 elif card.program == Program.RotateLeft:
                     newO = robot.rotate(-1)
-                    self.broadcast(Command(RobotTurnLeft, robot.Id))
+                    self.broadcast(Command(ServerCommands.RobotTurnLeft, { 'clientId': client.id }))
                 robot.orient = newO
             # TODO: send changes to clients
         # board elements move
