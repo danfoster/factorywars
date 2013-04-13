@@ -77,14 +77,12 @@ class Client(LineReceiver):
             self.game.broadcast(Command(ServerCommands.PlayerClearRegisters, { 'clientId': self.id }))
 
         elif message.command == ClientCommands.CommitRegisters:
-            if len(self.robot.registers.keys() != 5):
+            if len(self.robot.registers) != 5:
                 self.send(Command(ServerCommands.ServerMessage, 'You just tried to commit your registers, but you haven\'t selected all 5 cards yet'))
                 return
 
-            self.robot.commitRegisters()
-            self.game.broadcast(Command(ServerCommands.PlayerCommitRegisters, { 'clientId': self.id }))
+            self.game.clientCommitRegisters(self)
                 
-
 
 class ClientFactory(Factory):
     def __init__(self,game):

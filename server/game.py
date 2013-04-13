@@ -2,6 +2,7 @@ from entities.robot import Robot, Direction
 from entities.deck import Deck
 from entities.card import Program
 from network import ServerCommands, Command
+import config
 
 class Game:
 
@@ -89,3 +90,17 @@ class Game:
         # board elements move
         # lasers fire
         # touch checkpoints
+
+    def clientCommitRegisters(self, client):
+        client.robot.commitRegisters()
+        self.broadcast(Command(ServerCommands.PlayerCommitRegisters, { 'clientId': client.id }))
+
+        clientsWhichHaveNotCommitted = [client for client in self.clients if not client.robot.registersCommitted]
+        if len(clientsWhichHaveNotCommitted) == 0:
+            if config.debug:
+                print 'All players have committed their registers. Starting game.'
+            self.start()
+        elif len(clientsWhichHaveNotCommitted) == 1:
+            if config.debug:
+                print 'Final player is choosing their program cards!'
+            self.broadcast(Command(ServerCommands.FinalPlayerChoosingProgramCards, { 'clientId': clientsWhichHaveNotCommitted[0].id }))
