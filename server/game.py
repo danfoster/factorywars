@@ -50,9 +50,9 @@ class Game:
         for (client, cardId) in robotCards:
             # get card from card ID
             card = self.deck.getCard(cardId)
+            robot = client.robot
             if card.program >= 3:
                 # if card requires a tile change then check if this is possible
-                robot = client.robot
                 newX = robot.x
                 newY = robot.y
                 if card.program == Program.BackUp:
