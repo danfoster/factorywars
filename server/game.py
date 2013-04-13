@@ -13,6 +13,10 @@ class Game:
         
     def start(self):
         self.executeRegister(0)
+        self.executeRegister(1)
+        self.executeRegister(2)
+        self.executeRegister(3)
+        self.executeRegister(4)
 
     def addClient(self, client):
         robot = Robot(1, 1, Direction.Right)
@@ -39,7 +43,7 @@ class Game:
         # end of turn effects
         
     def executeRegister(self, regNum):
-        # reveal program cards
+        self.broadcast(Command(ServerCommands.RegisterPhaseBegin, { 'register': regNum }))
         
         # find robot with the highest priority for this register
         # get a list of each client object and their robot's card for this register
@@ -95,6 +99,8 @@ class Game:
         # board elements move
         # lasers fire
         # touch checkpoints
+
+        self.broadcast(Command(ServerCommands.RegisterPhaseEnd, { 'register': regNum }))
 
     def clientCommitRegisters(self, client):
         client.robot.commitRegisters()
