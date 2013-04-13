@@ -49,6 +49,16 @@ function Client:clearRegister(player, id)
     self.networking:send(message)
 end
 
+function Client:commitRegisters()
+    local message = {
+        command = Networking.ClientCommands.CommitRegisters,
+        value = {
+        },
+    }
+
+    self.networking:send(message)
+end
+
 function Client:serverMessage(message)
     print('Server: ' .. message)
 end

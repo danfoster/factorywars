@@ -1,6 +1,15 @@
 local Class = require("hump.class")
 
-local Player = Class {}
+PlayerStates = {
+    pickingCards = 1,
+    commitedCards = 2,
+    executingRegisters = 3,
+    endTurn = 4
+}
+
+local Player = Class {
+    PlayerStates = PlayerStates
+}
 
 function Player:init(client, name)
     self.client = client
@@ -8,6 +17,7 @@ function Player:init(client, name)
 
     self.hand = {}
     self.robot = nil
+    self.state = PlayerStates.pickingCards
 end
 
 function Player:addCard(card)
@@ -71,6 +81,12 @@ function Player:getRegisterPosition(card)
         end
     end
     return nil
+end
+
+function Player:commitRegisters()
+    self.state = PlayerStates.commitedCards
+    self:clearHand()
+    self.client:commitRegisters()
 end
 
 function Player:clearHand()

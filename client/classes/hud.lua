@@ -1,6 +1,7 @@
 local Class = require("hump.class")
 local Button = require("classes.button")
 local Led = require("classes.led")
+local Player = require("classes.player")
 
 local Hud = Class {}
 
@@ -134,72 +135,77 @@ function Hud:_drawCard(x,y,card,locked)
 end
 
 function Hud:mousePressed(x,y)
-    -- Is the mouse position in the vertical position for the hand deck?
-    if y >= love.graphics.getHeight()-self.cardHeight-115 and y <= love.graphics.getHeight()-115 then
-        px = (x%(self.cardWidth+5)) - 5
-        if px > 0 and px < self.cardWidth then
-            card = math.floor(x/(self.cardWidth+5)) + 1
-            if self.player.hand[card] then
-                self.heldCard = self.player.hand[card]
-                self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-115 )
-                self.heldCardX = px
-                -- self.player:setRegister(0,self.player.hand[card])
+    if self.player.state == Player.PlayerStates.pickingCards then
+        -- Is the mouse position in the vertical position for the hand deck?
+        if y >= love.graphics.getHeight()-self.cardHeight-115 and y <= love.graphics.getHeight()-115 then
+            px = (x%(self.cardWidth+5)) - 5
+            if px > 0 and px < self.cardWidth then
+                card = math.floor(x/(self.cardWidth+5)) + 1
+                if self.player.hand[card] then
+                    self.heldCard = self.player.hand[card]
+                    self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-115 )
+                    self.heldCardX = px
+                end
             end
-        end
-    -- Is the mouse position in the vertical position for the registers?
-    elseif y >= love.graphics.getHeight()-self.cardHeight-22 and y <= love.graphics.getHeight()-22 then
-        px = (x%(self.cardWidth+20)) - 14
-        if px > 0 and px < self.cardWidth then
-            card = math.floor((x-14)/(self.cardWidth+20)) + 1
-            if self.player.robot.registers[card] then
-                self.heldCard = self.player.robot.registers[card]
-                self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-22 )
-                self.heldCardX = px
+        -- Is the mouse position in the vertical position for the registers?
+        elseif y >= love.graphics.getHeight()-self.cardHeight-22 and y <= love.graphics.getHeight()-22 then
+            px = (x%(self.cardWidth+20)) - 14
+            if px > 0 and px < self.cardWidth then
+                card = math.floor((x-14)/(self.cardWidth+20)) + 1
+                if self.player.robot.registers[card] then
+                    self.heldCard = self.player.robot.registers[card]
+                    self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-22 )
+                    self.heldCardX = px
+                end
             end
-        end
 
-        if not self.heldCard then
-            if self.canCommit then
-                self.commitButton:checkClick(x,y)
+            if not self.heldCard then
+                if self.canCommit then
+                    self.commitButton:checkClick(x,y)
+                end
+                self.powerDownButton:checkClick(x,y)
             end
-            self.powerDownButton:checkClick(x,y)
         end
     end
 end
 
 function Hud:mouseReleased(x,y)
-    if self.heldCard then
-        -- Is the mouse position in the vertical position for the registers?
-        if y >= love.graphics.getHeight()-self.cardHeight-5-(self.registerBorderWidth*2) and y <= love.graphics.getHeight()-5-self.registerBorderWidth then
-            px = (x%(self.cardWidth+5+(self.registerBorderWidth*2))) - 5
-            if px > 0 and px < self.cardWidth+(self.registerBorderWidth*2) then
-                card = math.floor(x/(self.cardWidth+5+(self.registerBorderWidth*2))) + 1
-                if card >0 and card < 6 then
-                    self.player:setRegister(card,self.heldCard)
-                    self.leds[card]:setColor(205,199,9,255)
+    if self.player.state == Player.PlayerStates.pickingCards then
+        if self.heldCard then
+            -- Is the mouse position in the vertical position for the registers?
+            if y >= love.graphics.getHeight()-self.cardHeight-5-(self.registerBorderWidth*2) and y <= love.graphics.getHeight()-5-self.registerBorderWidth then
+                px = (x%(self.cardWidth+5+(self.registerBorderWidth*2))) - 5
+                if px > 0 and px < self.cardWidth+(self.registerBorderWidth*2) then
+                    card = math.floor(x/(self.cardWidth+5+(self.registerBorderWidth*2))) + 1
+                    if card >0 and card < 6 then
+                        self.player:setRegister(card,self.heldCard)
+                        self.leds[card]:setColor(205,199,9,255)
+                    end
+                end
+            else
+                pos = self.player:getRegisterPosition(self.heldCard)
+                self.player:removeRegisterCard(self.heldCard)
+                if pos then
+                    self.leds[pos]:setColor(25,25,25,255)
                 end
             end
-        else
-            pos = self.player:getRegisterPosition(self.heldCard)
-            self.player:removeRegisterCard(self.heldCard)
-            if pos then
-                self.leds[pos]:setColor(25,25,25,255)
+            if self:_countRegisters() == 5 and not self.canCommit then
+                self.canCommit = true
+                self.commitButton:setColor(255,255,255,255)
+            elseif self:_countRegisters() < 5 and self.canCommit then
+                self.canCommit = false
+                self.commitButton:setColor(100,100,100,255)
             end
-        end
-        if self:_countRegisters() == 5 and not self.canCommit then
-            self.canCommit = true
-            self.commitButton:setColor(255,255,255,255)
-        elseif self:_countRegisters() < 5 and self.canCommit then
-            self.canCommit = false
-            self.commitButton:setColor(100,100,100,255)
-        end
 
-        self.heldCard = nil
-    else
-        if self.canCommit then
-            self.commitButton:checkRelease(x,y)
+            self.heldCard = nil
+        else
+            if self.canCommit then
+                if self.commitButton:checkRelease(x,y) then
+                    self.player:commitRegisters()
+                end
+            end
+            self.powerDownButton:checkRelease(x,y)
         end
-        self.powerDownButton:checkRelease(x,y)
     end
 end
 
