@@ -16,6 +16,8 @@ ServerCommands = enum(
     PlayerClearRegister = 15,
     PlayerClearRegisters = 16,
     PlayerCommitRegisters = 17,
+    YourStartPositionIs = 18,
+    StartPosition = 19,
 
     RegisterPhaseBegin = 30,
     CurrentProgramCard = 31,

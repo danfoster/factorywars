@@ -10,6 +10,7 @@ class Game:
         self.deck = Deck()
         self.clients = []
         self.robots = []
+        self.robotStartY = 1
         
     def start(self):
         self.executeRegister(0)
@@ -19,16 +20,24 @@ class Game:
         self.executeRegister(4)
 
     def addClient(self, client):
-        robot = Robot(1, 1, Direction.Right)
+        #TODO: get start positions from board
+        robot = Robot(1, self.robotStartY, Direction.Right)
+        self.robotStartY = self.robotStartY + 1
         client.robot = robot
 
         client.send(Command(ServerCommands.ProgramDeck, self.deck.getDeck()))
         client.hand = [self.deck.dealCard().id for x in range(1,10)]
         client.send(Command(ServerCommands.DealProgramCards, client.hand))
+        #sync client IDs
         client.send(Command(ServerCommands.YourClientIdIs, { 'clientId': client.id }))
         self.broadcastExcept(client.id, Command(ServerCommands.ClientJoined, { 'clientId': client.id }))
         for existingClient in self.clients:
             client.send(Command(ServerCommands.ClientJoined, { 'clientId': existingClient.id }))
+        #sync robot start positions
+        client.send(Command(ServerCommands.YourStartPositionIs, { 'coords': [client.robot.x,client.robot.y] }))
+        self.broadcastExcept(client.id, Command(ServerCommands.StartPosition, { 'clientId': client.id, 'coords': [client.robot.x,client.robot.y] }))
+        for existingClient in self.clients:
+            client.send(Command(ServerCommands.StartPosition, { 'clientId': existingClient.id, 'coords': [existingClient.robot.x,existingClient.robot.y] }))
 
         self.robots.append(robot)
         self.clients.append(client)

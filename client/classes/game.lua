@@ -147,6 +147,13 @@ function Game:_handleNetworkCommand(command, value)
         self:removeRemotePlayer(value.clientId)
     elseif command == ServerCommands.YourClientIdIs then
         self.client.Id = value.clientId
+    elseif command == ServerCommands.YourStartPositionIs then
+        self.robot.x = value.coords[1]
+        self.robot.y = value.coords[2]
+    elseif command == ServerCommands.StartPosition then
+        local remoteRobot = self.remotePlayers[value.clientId].robot
+        remoteRobot.x = value.coords[1]
+        remoteRobot.y = value.coords[2]
     elseif command == ServerCommands.RobotTurnRight then
         self:enqueueActions(self:getPlayer(value.clientId).robot, "turnRight")
     elseif command == ServerCommands.RobotTurnLeft then
