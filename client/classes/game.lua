@@ -41,16 +41,6 @@ function Game:init(host, port, nickname)
     local player = Player(self.client, nickname or names[math.random(1, 6)], self.robot)
     self.client:addPlayer(player)
     
-    local data = self.networking:receive() 
-    if data then
-        local cards = {}
-        for k,v in pairs(data['value']) do
-            local card = Card(v['id'],v['priority'],v['program'])
-            cards[card.id] = card
-        end
-        self.deck = Deck(cards)
-        self.client.deck = self.deck
-    end
     self.networking:send({ command= ClientCommands.MyNameIs , value= nickname })
     self.networking:setTimeout(0.001)
 
@@ -147,6 +137,14 @@ function Game:_handleNetworkCommand(command, value)
         self:removeRemotePlayer(value.clientId)
     elseif command == ServerCommands.YourClientIdIs then
         self.client.Id = value.clientId
+    elseif command == ServerCommands.ProgramDeck then
+        local cards = {}
+        for k,v in pairs(value) do
+            local card = Card(v['id'],v['priority'],v['program'])
+            cards[card.id] = card
+        end
+        self.deck = Deck(cards)
+        self.client.deck = self.deck
     elseif command == ServerCommands.YourStartPositionIs then
         self.robot.x = value.coords[1]
         self.robot.y = value.coords[2]
