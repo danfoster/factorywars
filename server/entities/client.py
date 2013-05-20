@@ -40,7 +40,7 @@ class Client(LineReceiver):
 
         if message.command == ClientCommands.MyNameIs:
             self.nickname = message.value
-            self.game.broadcast(Command(ServerCommands.ClientChangedNickname, { 'clientId': self.id, 'nickname': self.nickname }))
+            self.game.broadcastExcept(self.id, Command(ServerCommands.ClientChangedNickname, { 'clientId': self.id, 'nickname': self.nickname }))
 
         elif message.command == ClientCommands.SetRegister:
             cardId = message.value['programCardId']

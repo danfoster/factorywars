@@ -83,7 +83,6 @@ function Networking:send(data)
     print("Sending JSON: ", json.encode(data))
 
     tcp:send(json.encode(data) .. '\r\n')
-    print('sent data to server')
 end
 
 function Networking:receive()

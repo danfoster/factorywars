@@ -7,7 +7,7 @@ local RemotePlayer = Class {
 }
 
 function RemotePlayer:init(id, robot)
-    --self.name = name
+    self.nickname = "test"
     self.id = id
 
     self.hand = {}

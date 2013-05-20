@@ -135,6 +135,8 @@ function Game:_handleNetworkCommand(command, value)
         self:addRemotePlayer(value.clientId)
     elseif command == ServerCommands.ClientLeft then
         self:removeRemotePlayer(value.clientId)
+    elseif command == ServerCommands.ClientChangedNickname then
+        self.remotePlayers[value.clientId].nickname = value.nickname
     elseif command == ServerCommands.YourClientIdIs then
         self.client.Id = value.clientId
     elseif command == ServerCommands.ProgramDeck then
