@@ -38,6 +38,9 @@ class Game:
         self.broadcastExcept(client.id, Command(ServerCommands.StartPosition, { 'clientId': client.id, 'coords': [client.robot.x,client.robot.y] }))
         for existingClient in self.clients:
             client.send(Command(ServerCommands.StartPosition, { 'clientId': existingClient.id, 'coords': [existingClient.robot.x,existingClient.robot.y] }))
+        #inform new client of existing nicknames
+        for existingClient in self.clients:
+            client.send(Command(ServerCommands.ClientChangedNickname, { 'clientId': existingClient.id, 'nickname': existingClient.nickname }))
 
         self.robots.append(robot)
         self.clients.append(client)
