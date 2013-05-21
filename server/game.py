@@ -3,6 +3,7 @@ from entities.deck import Deck
 from entities.card import Program
 from network import ServerCommands, Command
 import config
+import tmxlib
 
 class Game:
 
@@ -11,6 +12,9 @@ class Game:
         self.clients = []
         self.robots = []
         self.robotStartY = 1
+        #TODO: move this into a level file
+        tmxFilePath = '../client/data/boards/cross.tmx'
+        tmxlib.Map.open(tmxFilePath)
         
     def start(self):
         self.executeRegister(0)
