@@ -20,6 +20,8 @@ function Game:init(host, port, nickname)
     self.oldMouseX = 0
     self.oldMouseY = 0
     self.remotePlayers = {}
+    self.finalAnimationTimer = 0
+    self.finalAnimationDuration = 0
     
     -- test code
     local port = port or 1234
@@ -98,9 +100,12 @@ function Game:update(dt)
     
     -- Check if ready for next turn
     if #self.actionQueue == 0 and self.client.player.state == PlayerStates.executingRegisters then
-        self.client:readyForNextTurn()
+        self.finalAnimationTimer = self.finalAnimationTimer + dt
+        if self.finalAnimationTimer >= self.finalAnimationDuration then
+            self.client:readyForNextTurn()
+        end
     end
-
+    
     -- Receive Network Commands
     local data = self.networking:receive() 
     if data then
@@ -184,6 +189,8 @@ function Game:_handleNetworkCommand(command, value)
         -- we have received all animation commands for this turn
         if value.register == 4 then
             self.client:allRegistersReceived()
+            self.finalAnimationDuration = Robot.animations[self.actionQueue[#self.actionQueue][2]][1]
+            self.finalAnimationTimer = 0
         end
     elseif command == ServerCommands.TurnEnd then
         self.client:endTurn()
