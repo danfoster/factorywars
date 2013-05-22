@@ -32,7 +32,7 @@ class Game:
 
     def addClient(self, client):
         #TODO: get start positions from board
-        robot = Robot(1, self.robotStartY, Direction.Right)
+        robot = Robot(1, self.robotStartY, Direction.Down)
         self.robotStartY = self.robotStartY + 1
         client.robot = robot
 
