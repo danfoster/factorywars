@@ -27,6 +27,7 @@ ServerCommands = {
     RegisterPhaseBegin = 30,
     CurrentProgramCard = 31,
     DamageRobot = 32,
+    TurnBegin = 33,
 
     RobotTurnRight = 40,
     RobotTurnLeft = 41,
@@ -38,7 +39,8 @@ ServerCommands = {
     RobotContinueForward = 47,
     RobotContinueBackward = 48,
 
-    RegisterPhaseEnd = 70
+    RegisterPhaseEnd = 70,
+    TurnEnd = 71
 }
 
 ClientCommands = {

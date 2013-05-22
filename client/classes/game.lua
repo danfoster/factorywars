@@ -154,6 +154,8 @@ function Game:_handleNetworkCommand(command, value)
         local remoteRobot = self.remotePlayers[value.clientId].robot
         remoteRobot.x = value.coords[1]
         remoteRobot.y = value.coords[2]
+    elseif command == ServerCommands.TurnBegin then
+        self.client:startTurn()
     elseif command == ServerCommands.RobotTurnRight then
         self:enqueueActions(self:getPlayer(value.clientId).robot, "turnRight")
     elseif command == ServerCommands.RobotTurnLeft then
@@ -172,6 +174,8 @@ function Game:_handleNetworkCommand(command, value)
         self:enqueueActions(self:getPlayer(value.clientId).robot, "continueF")
     elseif command == ServerCommands.RobotContinueBackward then
         self:enqueueActions(self:getPlayer(value.clientId).robot, "continueB")
+    elseif command == ServerCommands.TurnEnd then
+        self.client:endTurn()
     else
         print("WARNING: Received unknown server command: " .. tostring(command))
     end

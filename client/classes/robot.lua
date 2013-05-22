@@ -99,4 +99,8 @@ function Robot:setRegister(id, card)
     return replaced
 end
 
+function Robot:resetRegisters()
+    self.registers = {}
+end
+
 return Robot

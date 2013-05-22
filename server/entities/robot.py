@@ -35,3 +35,7 @@ class Robot:
 
     def commitRegisters(self):
         self.registersCommitted = True
+
+    def resetRegisters(self):
+        self.registersCommitted = False
+        self.registers = [None for x in range(0,5)]

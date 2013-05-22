@@ -26,6 +26,14 @@ function Client:receiveHand(player, cards)
 
 end
 
+function Client:startTurn()
+    self.player:startTurn()
+end
+
+function Client:endTurn()
+    self.player:endTurn()
+end
+
 function Client:setRegister(id, card)
     local message = {
         command = Networking.ClientCommands.SetRegister,

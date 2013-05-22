@@ -39,6 +39,15 @@ function Player:removeCard(card)
     end
 end
 
+function Player:startTurn()
+    self.state = PlayerStates.pickingCards
+end
+
+function Player:endTurn()
+    self.state = PlayerStates.endTurn
+    self.robot:resetRegisters()
+end
+
 function Player:setRegister(id, card)
     self:removeRegisterCard(card)
     self:removeCard(card)

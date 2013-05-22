@@ -14,7 +14,7 @@ class Game:
         self.robotStartY = 1
         #TODO: move this into a level file
         tmxFilePath = '../client/data/boards/cross.tmx'
-        tmxlib.Map.open(tmxFilePath)
+        map = tmxlib.Map.open(tmxFilePath)
         
     def start(self):
         self.executeRegister(0)
@@ -22,6 +22,12 @@ class Game:
         self.executeRegister(2)
         self.executeRegister(3)
         self.executeRegister(4)
+        #TODO: deal with end of turn effects
+
+        self.broadcast(Command(ServerCommands.TurnEnd, {}))
+        self.resetRegisters()
+        self.dealCards()
+        self.broadcast(Command(ServerCommands.TurnBegin, {}))
 
     def addClient(self, client):
         #TODO: get start positions from board
@@ -61,13 +67,16 @@ class Game:
         for client in self.clients:
             if client.id != clientId:
                 client.send(command)
-    
-    #def turn(self):
-        # distribute cards
-        # receive arranged cards
-        # receive any intent to power down
-        # execute registers (card movements, board movements, interactions)
-        # end of turn effects
+
+    def dealCards(self):
+        #TODO: account for locked registers
+        for client in self.clients:
+            client.hand = [self.deck.dealCard().id for x in range(1,10)]
+            client.send(Command(ServerCommands.DealProgramCards, client.hand))
+
+    def resetRegisters(self):
+        for client in self.clients:
+            client.robot.resetRegisters()
         
     def executeRegister(self, regNum):
         self.broadcast(Command(ServerCommands.RegisterPhaseBegin, { 'register': regNum }))
