@@ -30,8 +30,22 @@ function Client:startTurn()
     self.player:startTurn()
 end
 
+function Client:allRegistersReceived()
+    self.player:executingRegisters()
+end
+
 function Client:endTurn()
     self.player:endTurn()
+end
+
+function Client:readyForNextTurn()
+    local message = {
+        command = Networking.ClientCommands.ReadyForNextTurn,
+        value = {
+        },
+    }
+    
+    self.networking:send(message)
 end
 
 function Client:setRegister(id, card)

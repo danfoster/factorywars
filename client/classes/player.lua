@@ -43,6 +43,10 @@ function Player:startTurn()
     self.state = PlayerStates.pickingCards
 end
 
+function Player:executingRegisters()
+    self.state = PlayerStates.executingRegisters
+end
+
 function Player:endTurn()
     self.state = PlayerStates.endTurn
     self.robot:resetRegisters()

@@ -95,6 +95,11 @@ function Game:update(dt)
     end
 
     self:executeActions()
+    
+    -- Check if ready for next turn
+    if #self.actionQueue == 0 and self.client.player.state == PlayerStates.executingRegisters then
+        self.client:readyForNextTurn()
+    end
 
     -- Receive Network Commands
     local data = self.networking:receive() 
@@ -174,6 +179,12 @@ function Game:_handleNetworkCommand(command, value)
         self:enqueueActions(self:getPlayer(value.clientId).robot, "continueF")
     elseif command == ServerCommands.RobotContinueBackward then
         self:enqueueActions(self:getPlayer(value.clientId).robot, "continueB")
+    elseif command == ServerCommands.RegisterPhaseEnd then
+        --TODO: do we want to do anything else with this command?
+        -- we have received all animation commands for this turn
+        if value.register == 4 then
+            self.client:allRegistersReceived()
+        end
     elseif command == ServerCommands.TurnEnd then
         self.client:endTurn()
     else

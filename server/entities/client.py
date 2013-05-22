@@ -13,6 +13,7 @@ class Client(LineReceiver):
         self.nickname = '<new client>'
         self.hand = []
         self.robot = None
+        self.readyForNextTurn = False
 
     def connectionMade(self):
         if config.debug:
@@ -80,6 +81,10 @@ class Client(LineReceiver):
                 return
 
             self.game.clientCommitRegisters(self)
+
+        elif message.command == ClientCommands.ReadyForNextTurn:
+            self.readyForNextTurn = True
+            self.game.clientReadyForNextTurn(self)
                 
 
 class ClientFactory(Factory):

@@ -49,9 +49,10 @@ ClientCommands = {
     ClearRegister = 11,
     ClearRegisters = 12,
     CommitRegisters = 13,
+    ReadyForNextTurn = 14,
     PlayOptionCard = 20,
     PowerDownNextTurn = 30,
-    RevertPowerDownNextTurn = 31,
+    RevertPowerDownNextTurn = 31
 }
 
 local Networking = Class {

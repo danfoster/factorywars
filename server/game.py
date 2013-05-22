@@ -24,6 +24,7 @@ class Game:
         self.executeRegister(4)
         #TODO: deal with end of turn effects
 
+    def startNewTurn(self):
         self.broadcast(Command(ServerCommands.TurnEnd, {}))
         self.resetRegisters()
         self.dealCards()
@@ -151,3 +152,8 @@ class Game:
             if config.debug:
                 print 'Final player is choosing their program cards!'
             self.broadcast(Command(ServerCommands.FinalPlayerChoosingProgramCards, { 'clientId': clientsWhichHaveNotCommitted[0].id }))
+
+    def clientReadyForNextTurn(self, client):
+        clientsWhichAreNotReady = [client for client in self.clients if not client.readyForNextTurn]
+        if len(clientsWhichAreNotReady) == 0:
+            self.startNewTurn()
