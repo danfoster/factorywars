@@ -1,8 +1,8 @@
-
+from utils import *
 
 MovementType = enum(Forward=1, Backward=2, StrafeLeft=3, StrafeRight=4)
 
-class movement:
+class Movement:
 
     def __init__(self, startX, startY):
         self.startX = startX

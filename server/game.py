@@ -1,6 +1,7 @@
 from entities.robot import Robot, Direction
 from entities.deck import Deck
 from entities.card import Program
+from collisionResolver import CollisionResolver
 from network import ServerCommands, Command
 import config
 import tmxlib
@@ -15,6 +16,7 @@ class Game:
         #TODO: move this into a level file
         tmxFilePath = '../client/data/boards/cross.tmx'
         map = tmxlib.Map.open(tmxFilePath)
+        collisionResolver = CollisionResolver()
         
     def start(self):
         self.executeRegister(0)
@@ -78,57 +80,6 @@ class Game:
     def resetRegisters(self):
         for client in self.clients:
             client.robot.resetRegisters()
-
-    #def checkMovement(self, client, newX, newY):
-    #    #TODO: refactor this function
-    #    currentX = client.robot.x
-    #    currentY = client.robot.y
-    #    distance = abs(currentX - newX) + abs(currentY - newY)
-
-    #    movementDirection = 0
-    #    scanX = newX
-    #    scanY = newY
-    #    if newX < currentX:
-    #        movementDirection = Direction.Left
-    #        scanX -= distance
-    #    elif newX > currentX:
-    #        movementDirection = Direction.Right
-    #        scanX += distance
-    #    elif newY < currentY:
-    #        movementDirection = Direction.Down
-    #        scanY -= distance
-    #    else:
-    #        movementDirection = Direction.Up
-    #        scanY += distance
-
-    #    minX = min(currentX, scanX)
-    #    maxX = max(currentX, scanX)
-    #    minY = min(currentY, scanY)
-    #    maxY = max(currentY, scanY)
-
-    #    robotDistances = []
-    #    for otherClient in self.clients:
-    #        if client.id != otherClient.id:
-    #            robotX = otherClient.robot.x
-    #            robotY = otherClient.robot.y
-    #            if robotX <= maxX and robotX >= minX:
-    #                if robotY <= maxY and robotY >= minY:
-    #                    # we have a collision
-    #                    collisionDistance = abs(currentX - robotX) + abs(currentY - robotY)
-    #                    robotDistances.append(otherClient, collisionDistance)
-
-    #    #no collisions
-    #    if len(robotDistances) == 0:
-
-    #    #sort by ascending distance
-    #    robotDistances = sorted(robotDistances, key=lambda distance: distance[1])
-    #    commands = []
-    #    for i in range(distance):
-    #        if robotDistances[0][1] > 1:
-    #            # robot can move fine
-
-    #    # use a DS with {start position, end, movement type, being pushed, (animation)}?
-    #    # where movement type is forward, back, strafe left, strafe right
         
     def executeRegister(self, regNum):
         self.broadcast(Command(ServerCommands.RegisterPhaseBegin, { 'register': regNum }))
@@ -144,33 +95,8 @@ class Game:
             card = self.deck.getCard(cardId)
             robot = client.robot
             if card.program >= 3:
-                # if card requires a tile change then check if this is possible
-                newX = robot.x
-                newY = robot.y
-                if card.program == Program.BackUp:
-                    newX, newY = robot.move(-1)
-                    self.broadcast(Command(ServerCommands.RobotGracefulStartBackward, { 'clientId': client.id }))
-                    self.broadcast(Command(ServerCommands.RobotGracefulStopBackward, { 'clientId': client.id }))
-                elif card.program == Program.Move1:
-                    newX, newY = robot.move(1)
-                    self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
-                    self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
-                elif card.program == Program.Move2:
-                    newX, newY = robot.move(2)
-                    self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
-                    self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
-                    self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
-                elif card.program == Program.Move3:
-                    newX, newY = robot.move(3)
-                    self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
-                    self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
-                    self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
-                    self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
-                # TODO: check that moving is legal, and find final position
-                # check for any robot collisions (pushing)
-                #self.checkMovement(client, newX, newY)
-                robot.x = newX
-                robot.y = newY
+                # if card requires a tile change then use the collisionResolver
+                collisionResolver.resolveMovement(client, card)
             else:
                 # just a rotation, which is always legal
                 newO = robot.orient
