@@ -28,6 +28,8 @@ class Game:
 
     def startNewTurn(self):
         self.broadcast(Command(ServerCommands.TurnEnd, {}))
+        for client in self.clients:
+            client.readyForNextTurn = False
         self.resetRegisters()
         self.deck.reset()
         self.dealCards()

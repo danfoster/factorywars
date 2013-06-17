@@ -39,6 +39,7 @@ function Client:endTurn()
 end
 
 function Client:readyForNextTurn()
+    self.player:readyForNewTurn()
     local message = {
         command = Networking.ClientCommands.ReadyForNextTurn,
         value = {

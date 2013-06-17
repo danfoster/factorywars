@@ -23,6 +23,8 @@ class CollisionResolver:
     # returns a list of movements that will occur as the given movement is executed
     def checkMovement(self, client, movement, clients):
         movements = [movement]
+        client.robot.x = movement.endX
+        client.robot.y = movement.endY
         for otherClient in clients:
             if client.id != otherClient.id:
                 robotX = otherClient.robot.x
@@ -36,6 +38,8 @@ class CollisionResolver:
                     newMove.beingPushed = True
                     newMove.order = movement.order
                     movements.append(newMove)
+                    otherClient.robot.x = newMove.endX
+                    otherClient.robot.y = newMove.endY
         return movements
 
 

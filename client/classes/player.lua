@@ -4,7 +4,8 @@ PlayerStates = {
     pickingCards = 1,
     commitedCards = 2,
     executingRegisters = 3,
-    endTurn = 4
+	readyForNewTurn = 4,
+    endTurn = 5
 }
 
 local Player = Class {
@@ -45,6 +46,10 @@ end
 
 function Player:executingRegisters()
     self.state = PlayerStates.executingRegisters
+end
+
+function Player:readyForNewTurn()
+    self.state = PlayerStates.readyForNewTurn
 end
 
 function Player:endTurn()
