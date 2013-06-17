@@ -11,6 +11,7 @@ class CollisionResolver:
         movementList = []
         for movement in cardMovements:
             movementList.append(self.checkMovement(client, movement, clients))
+        self.checkContinuingMotions(movementList)
         animationList = []
         for list in movementList:
             for movement in list:
@@ -42,6 +43,25 @@ class CollisionResolver:
                     otherClient.robot.y = newMove.endY
         return movements
 
+    def checkContinuingMotions(self, movementList):
+        # check if movement is the end of motion
+        lastIndex = len(movementList) - 1
+        finalMovements = movementList[lastIndex]
+        for movement in finalMovements:
+            movement.endOfMotion = True
+        for i in range(0,lastIndex):
+            for movement in movementList[i]:
+                # list comprehension determines if there are any movements for this robot in the next stage
+                moreMovements = [anotherMove for anotherMove in movementList[i+1] if anotherMove.client == movement.client]
+                movement.endOfMotion = (len(moreMovements) == 0)
+        # check in movement is the start of motion
+        firstMovements = movementList[0]
+        for movement in firstMovements:
+            movement.startOfMotion = True
+        for i in range(1,lastIndex+1):
+            for movement in movementList[i]:
+                previousMovements = [priorMove for priorMove in movementList[i-1] if priorMove.client == movement.client]
+                movement.startOfMotion = (len(previousMovements) == 0)
 
     # returns the MovementType resulting from the given robot being pushed in the given direction
     def typeDuringPush(self, robot, direction):
@@ -66,24 +86,17 @@ class CollisionResolver:
             y = y - 1
         elif movement.direction == Direction.Right:
             x = x + 1
-
         return x,y
-
 
     # returns a list of movements (where each movement is 1 tile)
     def buildMovementFromCard(self, client, card):
         robot = client.robot
-        #newX = robot.x
-        #newY = robot.y
         movement = Movement(robot.x, robot.y, client)
         movements = [movement]
         if card.program == Program.BackUp:
             movement.endX, movement.endY = robot.move(-1)
             movement.type = MovementType.Backward
             movement.direction = ((robot.orient - 3) % 4) + 1
-            #newX, newY = robot.move(-1)
-            #self.broadcast(Command(ServerCommands.RobotGracefulStartBackward, { 'clientId': client.id }))
-            #self.broadcast(Command(ServerCommands.RobotGracefulStopBackward, { 'clientId': client.id }))
         else:
             extra = 0
             if card.program == Program.Move2:
@@ -103,23 +116,7 @@ class CollisionResolver:
                 newMovement.direction = movement.direction
                 movements.append(newMovement)
             
-            #newX, newY = robot.move(1)
-            #self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
-            #self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
-            
-            #newX, newY = robot.move(2)
-            #self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
-            #self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
-            #self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
-        
-            #newX, newY = robot.move(3)
-            #self.broadcast(Command(ServerCommands.RobotGracefulStartForward, { 'clientId': client.id }))
-            #self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
-            #self.broadcast(Command(ServerCommands.RobotContinueForward, { 'clientId': client.id }))
-            #self.broadcast(Command(ServerCommands.RobotGracefulStopForward, { 'clientId': client.id }))
         return movements
-        #robot.x = newX
-        #robot.y = newY
 
     # returns an animation command corresponding to the given movement
     def getAnimation(self, movement):
@@ -128,20 +125,36 @@ class CollisionResolver:
         json = { 'clientId': movement.client.id }
         if movement.type == MovementType.Forward:
             if movement.beingPushed == False:
-                animations.append(Command(ServerCommands.RobotGracefulStartForward, json))
-                animations.append(Command(ServerCommands.RobotGracefulStopForward, json))
+                if movement.startOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStartForward, json))
+                else:
+                    animations.append(Command(ServerCommands.RobotContinueForward, json))
+                if movement.endOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStopForward, json))
             else:
                 #TODO: pushing animations here
-                animations.append(Command(ServerCommands.RobotGracefulStartForward, json))
-                animations.append(Command(ServerCommands.RobotGracefulStopForward, json))
+                if movement.startOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStartForward, json))
+                else:
+                    animations.append(Command(ServerCommands.RobotContinueForward, json))
+                if movement.endOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStopForward, json))
         elif movement.type == MovementType.Backward:
             if movement.beingPushed == False:
-                animations.append(Command(ServerCommands.RobotGracefulStartBackward, json))
-                animations.append(Command(ServerCommands.RobotGracefulStopBackward, json))
+                if movement.startOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStartBackward, json))
+                else:
+                    animations.append(Command(ServerCommands.RobotContinueBackward, json))
+                if movement.endOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStopBackward, json))
             else:
                 #TODO: pushing animations here
-                animations.append(Command(ServerCommands.RobotGracefulStartBackward, json))
-                animations.append(Command(ServerCommands.RobotGracefulStopBackward, json))
+                if movement.startOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStartBackward, json))
+                else:
+                    animations.append(Command(ServerCommands.RobotContinueBackward, json))
+                if movement.endOfMotion:
+                    animations.append(Command(ServerCommands.RobotGracefulStopBackward, json))
         #TODO: rest of animations here
 
         return animations

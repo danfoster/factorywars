@@ -15,3 +15,5 @@ class Movement:
         self.direction = Direction.Right
         self.beingPushed = False
         self.order = 1
+        self.startOfMotion = True
+        self.endOfMotion = True
