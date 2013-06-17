@@ -19,11 +19,11 @@ class Robot:
         x = self.x
         y = self.y
         if self.orient == Direction.Down:
-            y = self.y - distance
+            y = self.y + distance
         elif self.orient == Direction.Left:
             x = self.x - distance
         elif self.orient == Direction.Up:
-            y = self.y + distance
+            y = self.y - distance
         elif self.orient == Direction.Right:
             x = self.x + distance
             

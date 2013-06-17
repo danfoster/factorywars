@@ -16,7 +16,7 @@ class Game:
         #TODO: move this into a level file
         tmxFilePath = '../client/data/boards/cross.tmx'
         map = tmxlib.Map.open(tmxFilePath)
-        collisionResolver = CollisionResolver()
+        self.collisionResolver = CollisionResolver()
         
     def start(self):
         self.executeRegister(0)
@@ -88,7 +88,7 @@ class Game:
         # get a list of each client object and their robot's card for this register
         robotCards = [(cli, cli.robot.registers[regNum]) for cli in self.clients]
         # sort the list
-        robotCards = sorted(robotCards, key=lambda robotCard: robotCard[1])
+        robotCards = sorted(robotCards, key=lambda robotCard: robotCard[1], reverse=True)
         # robots move
         for (client, cardId) in robotCards:
             # get card from card ID
@@ -96,7 +96,9 @@ class Game:
             robot = client.robot
             if card.program >= 3:
                 # if card requires a tile change then use the collisionResolver
-                collisionResolver.resolveMovement(client, card)
+                animationList = self.collisionResolver.resolveMovement(client, card, self.clients)
+                for animation in animationList:
+                    self.broadcast(animation)
             else:
                 # just a rotation, which is always legal
                 newO = robot.orient
