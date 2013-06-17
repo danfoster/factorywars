@@ -29,6 +29,7 @@ class Game:
     def startNewTurn(self):
         self.broadcast(Command(ServerCommands.TurnEnd, {}))
         self.resetRegisters()
+        self.deck.reset()
         self.dealCards()
         self.broadcast(Command(ServerCommands.TurnBegin, {}))
 
@@ -72,7 +73,6 @@ class Game:
                 client.send(command)
 
     def dealCards(self):
-        #TODO: account for locked registers
         for client in self.clients:
             client.hand = [self.deck.dealCard().id for x in range(1,10)]
             client.send(Command(ServerCommands.DealProgramCards, client.hand))

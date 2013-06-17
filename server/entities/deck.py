@@ -42,6 +42,11 @@ class Deck:
     def getDeck(self):
         return self.deck
 
+    def reset(self):
+        #TODO: account for locked registers
+        for card in self.dealt:
+            self.deck.append(self.dealt.pop())
+
     def newRound(self):
         self.deck = []
         self.dealt = []
