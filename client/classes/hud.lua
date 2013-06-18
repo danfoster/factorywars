@@ -75,13 +75,18 @@ function Hud:update(dt)
         
         if self.dblClickTimerRunning then
             self.dblClickTimer = self.dblClickTimer + dt
+            if self.dblClickTimer > self.dblClickTime then
+                self.dblClickCard = nil
+                self.dblClickTimerRunning = false
+                self.dblClickTimer = 0
+            end
         end
     else
-            self.commitButton:setColor(100,255,100,255)
-            self.powerDownButton:setColor(100,100,100,255)
-            for k,v in pairs(self.leds) do
-                v:setColor(25,255,25,255)
-            end
+        self.commitButton:setColor(100,255,100,255)
+        self.powerDownButton:setColor(100,100,100,255)
+        for k,v in pairs(self.leds) do
+            v:setColor(25,255,25,255)
+        end
     end
 end
 
@@ -184,14 +189,16 @@ function Hud:mousePressed(x,y)
             px = (x%(self.cardWidth+5)) - 5
             if px > 0 and px < self.cardWidth then
                 card = math.floor(x/(self.cardWidth+5)) + 1
+                if self.dblClickTimerRunning and self.dblClickCard ~= card then
+                    self.dblClickTimerRunning = false
+                    self.dblClickTimer = 0
+                    self.dblClickCard = nil
+                end
                 if self.player.hand[card] then
                     self.heldCard = self.player.hand[card]
                     self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-115 )
                     self.heldCardX = px
-                    if self.dblClickTimerRunning and self.dblClickCard ~= card then
-                        self.dblClickTimerRunning = false
-                        self.dblClickTimer = 0
-                    end
+                    
                     self.dblClickCard = card
                 end
             end
