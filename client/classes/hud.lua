@@ -33,6 +33,12 @@ function Hud:init(player)
     self.heldCardY = 0
     self.heldCard = nil
     self.canCommit = false
+    
+    -- Time in seconds that the second click must be released by to constitute a double click
+    self.dblClickTime = 0.5
+    self.dblClickTimer = 0
+    self.dblClickTimerRunning = false
+    self.dblClickCard = nil
 end
 
 function Hud:draw()
@@ -42,7 +48,7 @@ function Hud:draw()
     self:_drawHeld()
 end
 
-function Hud:update()
+function Hud:update(dt)
     if self.player.state == Player.PlayerStates.pickingCards then
         if self:_countRegisters() == 5  then
             self.canCommit = true
@@ -65,6 +71,10 @@ function Hud:update()
             else
                 self.leds[i]:setColor(25,25,25,255)
             end
+        end
+        
+        if self.dblClickTimerRunning then
+            self.dblClickTimer = self.dblClickTimer + dt
         end
     else
             self.commitButton:setColor(100,255,100,255)
@@ -178,6 +188,11 @@ function Hud:mousePressed(x,y)
                     self.heldCard = self.player.hand[card]
                     self.heldCardY = y - (love.graphics.getHeight()-self.cardHeight-115 )
                     self.heldCardX = px
+                    if self.dblClickTimerRunning and self.dblClickCard ~= card then
+                        self.dblClickTimerRunning = false
+                        self.dblClickTimer = 0
+                    end
+                    self.dblClickCard = card
                 end
             end
         -- Is the mouse position in the vertical position for the registers?
@@ -200,6 +215,9 @@ function Hud:mousePressed(x,y)
                     self.powerDownButton:checkClick(x,y)
                 end
             end
+            self.dblClickCard = nil
+        else
+            self.dblClickCard = nil
         end
     end
 end
@@ -230,6 +248,19 @@ function Hud:mouseReleased(x,y)
             end
             if self.powerDownButton:checkRelease(x,y) then
                     self.player:powerDownToggle()
+            end
+        end
+        if self.dblClickCard then
+            if self.dblClickTimerRunning then
+                if self.dblClickTimer <= self.dblClickTime then
+                    self.player:setRegister(self.player:firstFreeRegister(), self.player.hand[self.dblClickCard]) 
+                end
+                self.dblClickTimer = 0
+                self.dblClickTimerRunning = false
+                self.dblClickCard = nil
+            else
+                self.dblClickTimer = 0
+                self.dblClickTimerRunning = true
             end
         end
     end

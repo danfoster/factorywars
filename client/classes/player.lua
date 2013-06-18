@@ -72,6 +72,15 @@ function Player:setRegister(id, card)
     return replaced
 end
 
+function Player:firstFreeRegister()
+    for i=1,self.robot.numRegisters do
+        if self.robot.registers[i] == nil then
+            return i
+        end
+    end
+    return self.robot.numRegisters
+end
+
 function Player:clearRegister(id)
     local cleared = self.robot:setRegister(id, nil)
 

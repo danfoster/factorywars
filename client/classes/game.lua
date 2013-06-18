@@ -120,7 +120,7 @@ function Game:update(dt)
         self.oldMouseY = love.mouse.getY()
     end
 
-    self.hud:update()
+    self.hud:update(dt)
 end
 
 function Game:addRemotePlayer(clientId)
